@@ -1,1 +1,2 @@
-day 0: brainstormed ideas / structure sketches and folder structures and general roadmap
+day 0: brainstormed ideas - structure sketches - folder structures - general roadmap
+day 1:
