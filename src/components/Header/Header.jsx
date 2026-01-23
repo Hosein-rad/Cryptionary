@@ -5,7 +5,7 @@ import SearchBar from "./SearchBar";
 
 export default function Header() {
   return (
-    <div className="flex justify-between bg-gray-600">
+    <div className="w-full px-2 py-1 flex justify-between fixed bg-gray-600">
       <Logo />
       <SearchBar />
       <div className="flex">

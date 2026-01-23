@@ -1,21 +1,21 @@
-import { SVGs } from "./SVGs";
+import { SidebarSVGs } from "./SidebarSVGs";
 
 function Sidebar() {
   return (
-    <div className="flex flex-col items-center w-14 h-dvh bg-gray-600">
-      <div>{SVGs.expand}</div>
-      {SVGs.markets}
-      {SVGs.exchanges}
-      {SVGs.wallets}
+    <div className="flex flex-col top-12 items-center bg-gray-600 w-14 h-dvh fixed">
+      <div>{SidebarSVGs.expand}</div>
+      {SidebarSVGs.markets}
+      {SidebarSVGs.exchanges}
+      {SidebarSVGs.wallets}
       <div className="mx-auto my-1 w-10/12 h-0.5 bg-gray-300 rounded-full"></div>
-      {SVGs.convert}
-      {SVGs.compare}
-      {SVGs.portfolioTracker}
-      {SVGs.watchlist}
+      {SidebarSVGs.convert}
+      {SidebarSVGs.compare}
+      {SidebarSVGs.portfolioTracker}
+      {SidebarSVGs.watchlist}
       <div className="mx-auto my-1 w-10/12 h-0.5 bg-gray-300 rounded-full"></div>
-      {SVGs.learn}
-      {SVGs.feed}
-      {SVGs.about}
+      {SidebarSVGs.learn}
+      {SidebarSVGs.feed}
+      {SidebarSVGs.about}
     </div>
   );
 }

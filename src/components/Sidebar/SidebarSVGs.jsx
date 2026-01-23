@@ -1,6 +1,6 @@
 // all SVGs will be replaced by custom SVGs made by myself in Figma later in the styling days
 
-export const SVGs = {
+export const SidebarSVGs = {
   expand: (
     <svg
       xmlns="http://www.w3.org/2000/svg"
