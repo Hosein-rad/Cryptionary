@@ -3,27 +3,21 @@
 export const SidebarSVGs = {
   expand: (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 -960 960 960"
-      className="size-10 hover:cursor-e-resize"
+      className="size-9 cursor-pointer hover:translate-x-1 duration-200"
     >
       <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
     </svg>
   ),
   markets: (
     <svg
-      version="1.0"
-      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 300.000000 300.000000"
       preserveAspectRatio="xMidYMid meet"
-      className="size-10 hover:cursor-pointer"
+      className="size-9"
     >
-      <metadata>
-        Created by potrace 1.10, written by Peter Selinger 2001-2011
-      </metadata>
       <g
         transform="translate(0.000000,300.000000) scale(0.100000,-0.100000)"
-        fill="#000000"
+        fill="#000"
         stroke="none"
       >
         <path
@@ -103,13 +97,10 @@ m260 -154 c91 -55 81 -201 -15 -239 -15 -6 -91 -12 -170 -13 l-142 -3 0 138 0
     <svg
       version="1.0"
       xmlns="http://www.w3.org/2000/svg"
-      className="size-10 hover:cursor-pointer"
+      className="size-9"
       viewBox="0 0 300.000000 300.000000"
       preserveAspectRatio="xMidYMid meet"
     >
-      <metadata>
-        Created by potrace 1.10, written by Peter Selinger 2001-2011
-      </metadata>
       <g
         transform="translate(0.000000,300.000000) scale(0.100000,-0.100000)"
         fill="#000000"
@@ -213,13 +204,10 @@ c85 0 95 -2 120 -25z m-217 -178 c16 -12 -1 -47 -22 -47 -10 0 -15 11 -15 36
     <svg
       version="1.0"
       xmlns="http://www.w3.org/2000/svg"
-      className="size-10 hover:cursor-pointer"
+      className="size-9"
       viewBox="0 0 200.000000 200.000000"
       preserveAspectRatio="xMidYMid meet"
     >
-      <metadata>
-        Created by potrace 1.10, written by Peter Selinger 2001-2011
-      </metadata>
       <g
         transform="translate(0.000000,200.000000) scale(0.100000,-0.100000)"
         fill="#000000"
@@ -295,7 +283,7 @@ m-972 104 c24 -17 29 -53 10 -72 -19 -19 -55 -14 -72 10 -20 29 -20 34 4 58
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 -960 960 960"
-      className="size-10"
+      className="size-9"
     >
       <path d="M480-40q-112 0-206-51T120-227v107H40v-240h240v80h-99q48 72 126.5 116T480-120q75 0 140.5-28.5t114-77q48.5-48.5 77-114T840-480h80q0 91-34.5 171T791-169q-60 60-140 94.5T480-40Zm-36-160v-52q-47-11-76.5-40.5T324-370l66-26q12 41 37.5 61.5T486-314q33 0 56.5-15.5T566-378q0-29-24.5-47T454-466q-59-21-86.5-50T340-592q0-41 28.5-74.5T446-710v-50h70v50q36 3 65.5 29t40.5 61l-64 26q-8-23-26-38.5T482-648q-35 0-53.5 15T410-592q0 26 23 41t83 35q72 26 96 61t24 77q0 29-10 51t-26.5 37.5Q583-274 561-264.5T514-250v50h-70ZM40-480q0-91 34.5-171T169-791q60-60 140-94.5T480-920q112 0 206 51t154 136v-107h80v240H680v-80h99q-48-72-126.5-116T480-840q-75 0-140.5 28.5t-114 77q-48.5 48.5-77 114T120-480H40Z" />
     </svg>
@@ -304,16 +292,16 @@ m-972 104 c24 -17 29 -53 10 -72 -19 -19 -55 -14 -72 10 -20 29 -20 34 4 58
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 -960 960 960"
-      className="size-10"
+      className="size-9"
     >
       <path d="M80-120v-80h360v-447q-26-9-45-28t-28-45H240l120 280q0 50-41 85t-99 35q-58 0-99-35t-41-85l120-280h-80v-80h247q12-35 43-57.5t70-22.5q39 0 70 22.5t43 57.5h247v80h-80l120 280q0 50-41 85t-99 35q-58 0-99-35t-41-85l120-280H593q-9 26-28 45t-45 28v447h360v80H80Zm585-320h150l-75-174-75 174Zm-520 0h150l-75-174-75 174Zm335-280q17 0 28.5-11.5T520-760q0-17-11.5-28.5T480-800q-17 0-28.5 11.5T440-760q0 17 11.5 28.5T480-720Z" />
     </svg>
   ),
-  portfolioTracker: (
+  tracker: (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 -960 960 960"
-      className="size-10"
+      className="size-9"
     >
       <path d="M160-120q-33 0-56.5-23.5T80-200v-160h280v80h240v-80h280v160q0 33-23.5 56.5T800-120H160Zm280-240v-80h80v80h-80ZM80-440v-200q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v200H600v-80H360v80H80Zm320-280h160v-80H400v80Z" />
     </svg>
@@ -322,7 +310,7 @@ m-972 104 c24 -17 29 -53 10 -72 -19 -19 -55 -14 -72 10 -20 29 -20 34 4 58
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 -960 960 960"
-      className="size-10"
+      className="size-9"
     >
       <path d="M160-80v-560q0-33 23.5-56.5T240-720h320q33 0 56.5 23.5T640-640v560L400-200 160-80Zm560-160v-560H280v-80h440q33 0 56.5 23.5T800-800v560h-80Z" />
     </svg>
@@ -331,7 +319,7 @@ m-972 104 c24 -17 29 -53 10 -72 -19 -19 -55 -14 -72 10 -20 29 -20 34 4 58
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 -960 960 960"
-      className="size-10"
+      className="size-9"
     >
       <path d="M480-160q-48-38-104-59t-116-21q-42 0-82.5 11T100-198q-21 11-40.5-1T40-234v-482q0-11 5.5-21T62-752q46-24 96-36t102-12q74 0 126 17t112 52q11 6 16.5 14t5.5 21v418q44-21 88.5-31.5T700-320q36 0 70.5 6t69.5 18v-481q15 5 29.5 11t28.5 14q11 5 16.5 15t5.5 21v482q0 23-19.5 35t-40.5 1q-37-20-77.5-31T700-240q-60 0-116 21t-104 59Zm140-240v-440l120-40v440l-120 40Z" />
     </svg>
@@ -340,7 +328,7 @@ m-972 104 c24 -17 29 -53 10 -72 -19 -19 -55 -14 -72 10 -20 29 -20 34 4 58
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 -960 960 960"
-      className="size-10"
+      className="size-9"
     >
       <path d="M160-120q-33 0-56.5-23.5T80-200v-640l67 67 66-67 67 67 67-67 66 67 67-67 67 67 66-67 67 67 67-67 66 67 67-67v640q0 33-23.5 56.5T800-120H160Zm0-80h280v-240H160v240Zm360 0h280v-80H520v80Zm0-160h280v-80H520v80ZM160-520h640v-120H160v120Z" />
     </svg>
@@ -349,7 +337,7 @@ m-972 104 c24 -17 29 -53 10 -72 -19 -19 -55 -14 -72 10 -20 29 -20 34 4 58
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 -960 960 960"
-      className="size-10"
+      className="size-9"
     >
       <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z" />
     </svg>

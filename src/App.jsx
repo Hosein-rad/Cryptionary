@@ -6,7 +6,7 @@ function App() {
   return (
     <>
       <Header />
-      <div className="flex">
+      <div className="flex bg-[#0C2A43] font-mono">
         <Sidebar />
         <Currencies />
       </div>
