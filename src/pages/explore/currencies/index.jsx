@@ -1,6 +1,7 @@
 import Header from "./Header";
 import Boxes from "./Boxes";
 import CoinsList from "./CoinsList";
+import CoinImageDownloader from "./CoinImageDownloader";
 
 function currencies() {
   return (
@@ -11,6 +12,7 @@ function currencies() {
       <Header />
       <Boxes />
       <CoinsList />
+      <CoinImageDownloader />
     </div>
   );
 }
