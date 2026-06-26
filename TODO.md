@@ -1,0 +1,1 @@
+- SIDEBAR: Icons, Hover effect pills, Background blur on expand

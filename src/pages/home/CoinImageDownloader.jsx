@@ -1,6 +1,6 @@
-// File: CoinImageDownloader.jsx
+// Auto download Coin Icons
 import React, { useState } from "react";
-import MetaData from "../../../data/MetaDataof2kCoins.json";
+import MetaData from "../../data/MetaDataof2kCoins.json";
 
 const PROXY_URL = "/download"; // Your local proxy server
 

@@ -1,7 +1,9 @@
-import { useRef, useState } from "react";
-import TrendingCoins from "../../../data/CoinGecko-Trendings.json";
+"use client";
 
-function TopNFTs() {
+import { useState, useRef } from "react";
+import TrendingCoins from "../../data/CoinGecko-Trendings.json";
+
+function TopCoins() {
   const [text, setText] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef();
@@ -16,11 +18,11 @@ function TopNFTs() {
     }
   };
 
-  for (let x = 0; x < Object.keys(TrendingCoins.nfts).length; x++) {
+  for (let x = 0; x < Object.keys(TrendingCoins.coins).length; x++) {
     jsx.push(
       <a
         href={"#"}
-        key={TrendingCoins.nfts[x].nft_contract_id}
+        key={TrendingCoins.coins[x].item.coin_id}
         className="m-2 border-none hover:scale-110 duration-150"
         onMouseLeave={() => {
           document.removeEventListener("mousemove", mouseLocation);
@@ -31,7 +33,7 @@ function TopNFTs() {
         <img
           onMouseEnter={() => {
             document.addEventListener("mousemove", mouseLocation);
-            setText(TrendingCoins.nfts[x].name);
+            setText(TrendingCoins.coins[x].item.name);
             setIsVisible(true);
           }}
           onMouseLeave={() => {
@@ -39,20 +41,21 @@ function TopNFTs() {
             setText("");
             setIsVisible(false);
           }}
-          src={TrendingCoins.nfts[x].thumb}
-          alt={TrendingCoins.nfts[x].name + "Logo"}
-          className="size-20 border-none rounded-full shadow-gray-500 shadow-lg hover:shadow-gray-800 duration-500"
+          src={TrendingCoins.coins[x].item.small}
+          alt={TrendingCoins.coins[x].item.name + "Logo"}
+          className="size-15 border-none rounded-full shadow-gray-500 shadow-lg hover:shadow-gray-700 duration-500"
         />
       </a>
     );
   }
+
   return (
-    <div className="mx-4 my-10 flex flex-wrap justify-center items-center">
+    <div className="mx-4 my-4 flex flex-wrap justify-center items-center">
       {jsx.map((item) => item)}
       {isVisible && (
         <div
           ref={ref}
-          className="p-1 absolute text-md font-bold border-l-2 pointer-events-none border-2 border-black bg-white opacity-50 rounded-md"
+          className="p-1 absolute text-md font-bold pointer-events-none border-2 border-black bg-white opacity-50 rounded-md"
         >
           {text}
         </div>
@@ -61,4 +64,4 @@ function TopNFTs() {
   );
 }
 
-export default TopNFTs;
+export default TopCoins;

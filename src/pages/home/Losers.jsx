@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import SortedArray from "./SortCoinsByPriceChange";
+import SortedArray from "./SortCoinsByPriceChange.js";
 import CurrencyItem from "./CurrencyItem.jsx";
-import MetaData from "../../../data/MetaDataof2kCoins.json";
+import MetaData from "../../data/MetaDataof2kCoins.json";
 
 function Losers() {
   const [timeframe, setTimeframe] = useState("15m");

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import CoinPaprikaData from "../../../data/CoinPaprika-Top2k.json";
-import MetaData from "../../../data/MetaDataof2kCoins.json";
+import CoinPaprikaData from "../../data/CoinPaprika-Top2k.json";
+import MetaData from "../../data/MetaDataof2kCoins.json";
 
 function CoinsList() {
   const [page, setPage] = useState(1);
