@@ -1,8 +1,8 @@
 "use client";
 
-// a bot built to download 2000 coin images from the coingecko api, in batch or one by one
 import { useState, useRef, useEffect } from "react";
 import { HeaderSVGs } from "./HeaderSVGs";
+import { useNavigate } from "react-router-dom";
 
 // Props: array of coin objects (at least {id, name, symbol, image})
 function Searchbar({ coins = [] }) {
@@ -10,6 +10,7 @@ function Searchbar({ coins = [] }) {
   const [isFocused, setIsFocused] = useState(false);
   const [results, setResults] = useState([]);
   const containerRef = useRef(null);
+  const navigate = useNavigate();
 
   // Update results whenever inputVal changes
   useEffect(() => {
@@ -24,7 +25,7 @@ function Searchbar({ coins = [] }) {
           coin.name.toLowerCase().includes(query) ||
           coin.symbol.toLowerCase().includes(query)
       )
-      .slice(0, 10); // limit to 10 for performance
+      .slice(0, 10);
     setResults(filtered);
   }, [inputVal, coins]);
 
@@ -42,7 +43,7 @@ function Searchbar({ coins = [] }) {
   const handleSelect = (coin) => {
     // Navigate or do something with selected coin
     console.log("Selected:", coin);
-    // Example: window.location.href = `/coin/${coin.id}`;
+    navigate(`/coin/${coin.id}`); // navigate to a dynamic url containing the coin id
     setInputVal(coin.name); // optional: fill input with selected coin name
     setIsFocused(false);
   };
@@ -54,7 +55,10 @@ function Searchbar({ coins = [] }) {
       : "top-1/5 left-1/8";
 
   return (
-    <div ref={containerRef} className="relative w-1/2 m-1">
+    <div
+      ref={containerRef}
+      className="relative w-1/2 m-1 overflow-y-visible z-101"
+    >
       <div
         className={`relative flex rounded-full outline-0 outline-cyan-400 bg-cyan-900 hover:outline-2 focus-within:bg-cyan-700 focus-within:outline-2 focus-within:border-cyan-700 ${
           isFocused ? "bg-cyan-700 outline-2" : ""
@@ -88,7 +92,7 @@ function Searchbar({ coins = [] }) {
       </div>
       {/* Dropdown results */}
       {isFocused && results.length > 0 && (
-        <div className="absolute top-full mt-2 w-full bg-cyan-800 border border-cyan-700 rounded-xl shadow-lg z-50 max-h-80 overflow-y-auto scroll-hidden">
+        <div className="absolute top-full mt-2 w-full bg-cyan-800 border border-cyan-700 rounded-xl shadow-lg max-h-fit scroll-hidden">
           {results.map((coin) => (
             <div
               key={coin.id}

@@ -17,7 +17,7 @@ export const SidebarSVGs = {
     >
       <g
         transform="translate(0.000000,300.000000) scale(0.100000,-0.100000)"
-        fill="#000"
+        fill="currentColor"
         stroke="none"
       >
         <path
@@ -90,6 +90,31 @@ m260 -154 c91 -55 81 -201 -15 -239 -15 -6 -91 -12 -170 -13 l-142 -3 0 138 0
 137 148 0 c128 0 151 -3 179 -20z m-8 -308 c77 -39 101 -132 51 -202 -36 -51
 -71 -60 -227 -60 l-138 0 -4 140 -3 140 143 0 c117 0 150 -3 178 -18z"
         />
+      </g>
+    </svg>
+  ),
+  "coin-info": (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      stroke="#000000"
+      className="size-9"
+    >
+      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+      <g
+        id="SVGRepo_tracerCarrier"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      ></g>
+      <g id="SVGRepo_iconCarrier">
+        <path
+          d="M21 9.5C21 11.9853 16.9706 14 12 14M21 9.5C21 7.01472 16.9706 5 12 5C7.02944 5 3 7.01472 3 9.5M21 9.5V15C21 17.2091 16.9706 19 12 19M12 14C7.02944 14 3 11.9853 3 9.5M12 14V19M3 9.5V15C3 17.2091 7.02944 19 12 19M7 18.3264V13.2422M17 18.3264V13.2422"
+          stroke="#000000"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></path>{" "}
       </g>
     </svg>
   ),

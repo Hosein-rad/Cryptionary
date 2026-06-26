@@ -6,6 +6,7 @@ import GradientTitle from "../../ui/GradientTitle";
 function Header() {
   return (
     <div
+      id="#"
       className="pt-10 pb-25 rounded-t-3xl border-b-10 border-black"
       style={{
         backgroundImage: `url("https://ghab24.com/movafaghiat/media/appmedia/image/GHAB%20MEDIA%20DESKTOP%20745-min.jpg")`,
