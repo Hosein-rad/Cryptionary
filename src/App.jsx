@@ -24,7 +24,8 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: "/", element: <Home /> },
-      { path: "/CoinDetail/:coinId", element: <CoinDetail /> },
+      { path: "/coin/:coinId", element: <CoinDetail /> },
+      { path: "/coinDetail", element: <CoinDetail /> },
       { path: "/compare", element: <Compare /> },
     ],
   },

@@ -41,10 +41,9 @@ function Searchbar({ coins = [] }) {
   }, []);
 
   const handleSelect = (coin) => {
-    // Navigate or do something with selected coin
     console.log("Selected:", coin);
-    navigate(`/coin/${coin.id}`); // navigate to a dynamic url containing the coin id
-    setInputVal(coin.name); // optional: fill input with selected coin name
+    navigate(`/coin/${coin.id}`);
+    setInputVal("");
     setIsFocused(false);
   };
 

@@ -3,6 +3,7 @@
 * {
   box-sizing: border-box;
   scroll-behavior: smooth;
+  scrollbar-width: none;
 }
 
 body {
@@ -14,8 +15,4 @@ body {
   src: url("./assets/fonts/Gorehand.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
-}
-
-.scroll-hidden {
-  scrollbar-width: none;
 }
