@@ -9,6 +9,7 @@ import {
   ScrollRestoration,
   Outlet,
 } from "react-router-dom";
+import "./lib/chartSetup";
 
 const router = createBrowserRouter([
   {
