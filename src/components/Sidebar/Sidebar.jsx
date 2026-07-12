@@ -34,11 +34,11 @@ function Sidebar() {
       <NavLink className="text-nowrap" to="/CoinDetail">
         {IconItem("coin-info")}
       </NavLink>
-      <NavLink to="/convert">{IconItem("convert")}</NavLink>
-      <NavLink to="/compare">{IconItem("compare")}</NavLink>
-      <NavLink to="/watchlist">{IconItem("watchlist")}</NavLink>
+      <NavLink to="/Converter">{IconItem("convert")}</NavLink>
+      <NavLink to="/Compare">{IconItem("compare")}</NavLink>
+      <NavLink to="/Watchlist">{IconItem("watchlist")}</NavLink>
       <div className="mx-auto my-1 w-5/6 h-0.5 bg-gray-300 rounded-full"></div>
-      <NavLink to="/about">{IconItem("about")}</NavLink>
+      <NavLink to="/About">{IconItem("about")}</NavLink>
     </div>
   );
 }

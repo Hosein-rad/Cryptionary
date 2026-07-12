@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import SimpleLineChart from "./Chart";
+import MultiChart from "./MultiChart";
 
 export default function CoinDetail() {
   const { coinId } = useParams();
@@ -10,7 +10,7 @@ export default function CoinDetail() {
 
   useEffect(() => {
     if (!coinId) return;
-    if (coinData) return; // --------------------------remove later---------------------------
+    // if (coinData) return; // ------- uncomment when editing : prevents constant fetches -----------
     const controller = new AbortController();
 
     setCoinData(null);
@@ -32,7 +32,7 @@ export default function CoinDetail() {
 
     // fetch chart details
     fetch(
-      `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=10`,
+      `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=1`,
       {
         signal: controller.signal,
       }
@@ -523,7 +523,7 @@ export default function CoinDetail() {
       {/* -------------------- COIN CHART COLUMN -------------------- */}
       {coinId && chartData && (
         <div className="w-2/3 h-full px-5 flex flex-col overflow-y-scroll">
-          <SimpleLineChart />
+          <MultiChart chartData={chartData} />
         </div>
       )}
 

@@ -10,7 +10,6 @@ import {
   Legend,
   Filler,
 } from "chart.js";
-
 import {
   CandlestickController,
   CandlestickElement,
