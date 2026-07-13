@@ -27,7 +27,7 @@ export default function CurrencySelect({ value, onChange, currencies }) {
       )
     : currencies;
 
-  const results = filtered.slice(0, 5); // show first 5
+  const results = filtered.slice(0, 6); // show first 5
 
   return (
     <div ref={containerRef} className="relative">

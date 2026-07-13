@@ -1,4 +1,3 @@
-// pages/Converter.jsx
 import { useState } from "react";
 import CurrencySelect from "./CurrencySelect";
 import { FIATS } from "./fiats";
@@ -6,17 +5,17 @@ import coins from "../../data/CoinGecko2k.json";
 
 // Popular order (used to sort the list so these appear first)
 const POPULAR_IDS = [
+  "bitcoin",
   "usd",
   "eur",
+  "ethereum",
+  "tether",
   "gbp",
   "jpy",
   "krw",
-  "bitcoin",
-  "ethereum",
-  "tether",
 ];
 
-export default function Converter({ coins = [] }) {
+export default function Converter() {
   // Merge fiats + cryptos and sort by popularity
   const allCurrencies = [
     ...FIATS.map((f) => ({ ...f, type: "fiat" })),
@@ -40,29 +39,6 @@ export default function Converter({ coins = [] }) {
   // Helper to get currency type
   const getType = (id) => allCurrencies.find((c) => c.id === id)?.type;
 
-  const buildEndpoint = () => {
-    const fromType = getType(fromCurrency);
-    const toType = getType(toCurrency);
-
-    // Crypto → Crypto: from crypto in to crypto
-    if (fromType === "crypto" && toType === "crypto") {
-      return `https://api.coingecko.com/api/v3/simple/price?ids=${fromCurrency}&vs_currencies=${toCurrency}`;
-    }
-
-    // Crypto → Fiat: from crypto in to fiat
-    if (fromType === "crypto" && toType === "fiat") {
-      return `https://api.coingecko.com/api/v3/simple/price?ids=${fromCurrency}&vs_currencies=${toCurrency}`;
-    }
-
-    // Fiat → Crypto: to crypto in from fiat (then invert)
-    if (fromType === "fiat" && toType === "crypto") {
-      return `https://api.coingecko.com/api/v3/simple/price?ids=${toCurrency}&vs_currencies=${fromCurrency}`;
-    }
-
-    // Fiat → Fiat: use bitcoin as bridge
-    return `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=${fromCurrency},${toCurrency}`;
-  };
-
   const handleConvert = async () => {
     if (!amount || isNaN(amount) || amount <= 0) {
       setError("Enter a valid amount");
@@ -70,26 +46,43 @@ export default function Converter({ coins = [] }) {
     }
     setLoading(true);
     setError("");
+
+    const fromType = getType(fromCurrency);
+    const toType = getType(toCurrency);
+
     try {
-      const res = await fetch(buildEndpoint());
+      // Build the URL – exactly one fetch, always with a crypto as base
+      let crypto, vs;
+      if (fromType === "crypto") {
+        crypto = fromCurrency;
+        vs = toCurrency;
+      } else {
+        // from is fiat
+        crypto = toType === "crypto" ? toCurrency : "bitcoin";
+        vs = fromCurrency + (toType === "fiat" ? `,${toCurrency}` : "");
+      }
+
+      const res = await fetch(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${crypto}&vs_currencies=${vs}`
+      );
       if (!res.ok) throw new Error(`API error: ${res.status}`);
       const data = await res.json();
 
-      const fromType = getType(fromCurrency);
-      const toType = getType(toCurrency);
       let converted;
-
-      if (fromType === "crypto" && toType === "crypto") {
-        converted = amount * data[fromCurrency][toCurrency];
-      } else if (fromType === "crypto" && toType === "fiat") {
-        converted = amount * data[fromCurrency][toCurrency];
-      } else if (fromType === "fiat" && toType === "crypto") {
-        converted = amount / data[toCurrency][fromCurrency];
+      if (fromType === "crypto") {
+        // crypto → anything: use direct rate
+        converted = amount * data[crypto][toCurrency];
       } else {
-        // fiat → fiat
-        const btcFrom = data.bitcoin[fromCurrency];
-        const btcTo = data.bitcoin[toCurrency];
-        converted = amount * (btcTo / btcFrom);
+        // fiat → anything
+        const btcFrom = data[crypto][fromCurrency];
+        if (toType === "crypto") {
+          // fiat → crypto: invert
+          converted = amount / btcFrom;
+        } else {
+          // fiat → fiat: cross via crypto
+          const btcTo = data[crypto][toCurrency];
+          converted = (amount / btcFrom) * btcTo;
+        }
       }
       setResult(converted.toFixed(6));
     } catch (err) {
@@ -101,7 +94,7 @@ export default function Converter({ coins = [] }) {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-gray-900 rounded-xl shadow-md p-6 text-white space-y-5">
+    <div className="w-4/5 h-100 mx-auto bg-gray-900 rounded-xl shadow-md p-6 text-white space-y-5">
       <h2 className="text-2xl font-bold">Converter</h2>
 
       <div className="flex gap-3 items-end">
