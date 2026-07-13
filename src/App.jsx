@@ -1,9 +1,10 @@
 import Header from "./components/Header/Header";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Home from "./pages/Home";
-import Compare from "./pages/Compare";
 import Converter from "./pages/Converter";
 import CoinDetail from "./pages/CoinDetail/Index";
+import Watchlist from "./pages/Watchlist";
+import About from "./pages/about";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -29,7 +30,8 @@ const router = createBrowserRouter([
       { path: "/coin/:coinId", element: <CoinDetail /> },
       { path: "/CoinDetail", element: <CoinDetail /> },
       { path: "/Converter", element: <Converter /> },
-      { path: "/Compare", element: <Compare /> },
+      { path: "/Watchlist", element: <Watchlist /> },
+      { path: "/About", element: <About /> },
     ],
   },
 ]);

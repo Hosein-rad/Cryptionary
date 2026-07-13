@@ -35,7 +35,6 @@ function Sidebar() {
         {IconItem("coin-info")}
       </NavLink>
       <NavLink to="/Converter">{IconItem("convert")}</NavLink>
-      <NavLink to="/Compare">{IconItem("compare")}</NavLink>
       <NavLink to="/Watchlist">{IconItem("watchlist")}</NavLink>
       <div className="mx-auto my-1 w-5/6 h-0.5 bg-gray-300 rounded-full"></div>
       <NavLink to="/About">{IconItem("about")}</NavLink>
