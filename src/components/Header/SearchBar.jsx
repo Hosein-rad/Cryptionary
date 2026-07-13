@@ -41,7 +41,6 @@ function Searchbar({ coins = [] }) {
   }, []);
 
   const handleSelect = (coin) => {
-    console.log("Selected:", coin);
     navigate(`/coin/${coin.id}`);
     setInputVal("");
     setIsFocused(false);

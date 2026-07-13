@@ -3,3 +3,5 @@
 - add to the "loading" of the coin detail page a "check internet..." after X sec
 
 - bring back the Strict Mode
+
+-Converter: crypto to crypto = NaN ... FIX IT
