@@ -76,11 +76,11 @@ function Gainers() {
           id_={MetaData[item.symbol]?.id}
           rank={item.rank}
           symbol={item.symbol}
+          name={item.name}
           price={formatter.format(item.quotes.USD.price)}
           changePercent={item.quotes.USD[`percent_change_${timeframe}`].toFixed(
             2
           )}
-          onClick={() => navigate(`/coin/${item.id}`)}
         />
       ))}
     </>

@@ -1,16 +1,17 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Sparkline from "./Sparkline";
 import offlineData from "../../data/CoinGeckoMarket.json";
 
 const COINS_PER_PAGE = 250;
 
-function CoinsList() {
+function CoinsList({ onLoaded }) {
   const [page, setPage] = useState(0);
   const [fullData, setFullData] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(false);
   const [offlineUsed, setOfflineUsed] = useState(false);
+  const hasCalledLoaded = useRef(false);
   const navigate = useNavigate();
   const formatter = new Intl.NumberFormat("en", {
     notation: "compact",
@@ -35,18 +36,31 @@ function CoinsList() {
           const ids = new Set(prev.map((c) => c.id));
           return [...prev, ...data.filter((c) => !ids.has(c.id))];
         });
+
+        setTimeout(() => {
+          if (!hasCalledLoaded.current) {
+            onLoaded?.();
+            hasCalledLoaded.current = true;
+          }
+        }, 0);
       } catch (err) {
         console.error("CoinGecko fetch failed:", err);
 
         if (pageNum === 1 && !offlineUsed) {
           setFullData(offlineData);
           setOfflineUsed(true);
+          setTimeout(() => {
+            if (!hasCalledLoaded.current) {
+              onLoaded?.();
+              hasCalledLoaded.current = true;
+            }
+          }, 0);
         }
       } finally {
         setLoading(false);
       }
     },
-    [offlineUsed]
+    [offlineUsed, onLoaded]
   );
 
   useEffect(() => {
@@ -120,11 +134,13 @@ function CoinsList() {
 
                 <td className="h-full ml-1">
                   <img
-                    src={item.image}
+                    src={item.image || "/cryptionary-icon.png"}
+                    loading="lazy"
                     alt={item.symbol}
                     className="mr-2 rounded-full size-6 inline"
                     onError={(e) => {
-                      e.target.style.display = "none";
+                      e.target.onerror = null;
+                      e.target.src = "/cryptionary-icon.png";
                     }}
                   />
                   <span className="text-shadow-cyan-300 font-bold text-shadow-xs inline">

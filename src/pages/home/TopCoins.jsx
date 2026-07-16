@@ -35,7 +35,8 @@ function TopCoins({ data }) {
       className="relative m-2 border-none hover:scale-110 rounded-full duration-150 cursor-pointer"
     >
       <img
-        src={coin.item.small}
+        src={coin.item.small || "/cryptionary-icon.png"}
+        loading="lazy"
         alt={coin.item.name + " Logo"}
         className="size-15 border-none rounded-full shadow-gray-500 shadow-lg hover:shadow-gray-700 duration-500"
         onMouseEnter={() => {

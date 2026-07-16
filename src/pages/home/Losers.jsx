@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import CurrencyItem from "./CurrencyItem.jsx";
 import MetaData from "../../data/MetaDataof2kCoins.json";
 import offlineData from "../../data/CoinPaprika-Top2k.json";
+import { useNavigate } from "react-router-dom";
 
 const formatter = new Intl.NumberFormat("en", {
   notation: "compact",
@@ -11,6 +12,7 @@ const formatter = new Intl.NumberFormat("en", {
 function Losers() {
   const [timeframe, setTimeframe] = useState("15m");
   const [fullData, setFullData] = useState(offlineData);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let cancelled = false;

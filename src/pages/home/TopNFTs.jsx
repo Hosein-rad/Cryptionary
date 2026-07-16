@@ -34,7 +34,8 @@ function TopNFTs({ data }) {
       className="m-2 border-none hover:scale-110 rounded-full duration-150"
     >
       <img
-        src={nft.thumb}
+        src={nft.thumb || "/cryptionary-icon.png"}
+        loading="lazy"
         alt={nft.name + " Logo"}
         className="size-20 border-none rounded-full shadow-gray-500 shadow-lg hover:shadow-gray-800 duration-500"
         onMouseEnter={() => {

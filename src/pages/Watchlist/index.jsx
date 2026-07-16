@@ -2,10 +2,9 @@ const Watchlist = () => {
   const fetchData = async () => {
     fetch(
       // "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=4&sparkline=false&price_change_percentage=1h,24h,7d,14d,30d,200d,1y"
-      // "https://api.coinpaprika.com/v1/tickers"
-      // "https://api.coinpaprika.com/v1/tickers"
+      "https://api.coinpaprika.com/v1/tickers"
       // "https://api.coingecko.com/api/v3/search/trending"
-      "https://api.coingecko.com/api/v3/coins/hedera-hashgraph"
+      // "https://api.coingecko.com/api/v3/coins/hedera-hashgraph"
       // "https://api.coingecko.com/api/v3/coins/top_gainers_losers"
       // "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit=30&sort=percent_change_24h&sort_dir=desc",
       // {

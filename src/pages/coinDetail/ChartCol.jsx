@@ -5,6 +5,10 @@ const formatter = new Intl.NumberFormat("en", {
   notation: "compact",
   maximumFractionDigits: 2,
 });
+const formatter2 = new Intl.NumberFormat("en", {
+  notation: "compact",
+  maximumFractionDigits: 5,
+});
 
 // ------------------- CUSTOM CROSSHAIR ------------------- //
 const customCrosshair = {
@@ -66,7 +70,7 @@ const options1 = {
       position: "left",
       title: { display: true, text: "Price (USD)", color: "white" },
       grid: { drawOnChartArea: false },
-      ticks: { color: "white", callback: (value) => formatter.format(value) },
+      ticks: { color: "white", callback: (value) => formatter2.format(value) },
     },
     yVolume: {
       type: "linear",
@@ -110,7 +114,7 @@ const options2 = {
 };
 
 // ------------------- MULTI CHART COMPONENT ------------------- //
-function MultiChart({ chartData }) {
+function ChartCol({ chartData }) {
   const priceData = chartData.prices.map(([t, v]) => ({ x: t, y: v }));
   const marketCapData = chartData.market_caps.map(([t, v]) => ({ x: t, y: v }));
   const volumeData = chartData.total_volumes.map(([t, v]) => ({ x: t, y: v }));
@@ -173,4 +177,4 @@ function MultiChart({ chartData }) {
   );
 }
 
-export default MultiChart;
+export default ChartCol;

@@ -1,10 +1,9 @@
 - SIDEBAR: Icons, Hover effect pills, Background blur on expand
 - factor the "handleClickOutside" from searchbar and sidebar
 - add to the "loading" of the coin detail page a "check internet..." after X sec
-
 - bring back the Strict Mode
-
--Converter: crypto to crypto = NaN ... FIX IT
-
+- Converter: crypto to crypto = NaN ... FIX IT
 - add a btn to scroll to top in the landing page
 - REFACTOR the coinDetail index page, 500+ lines of code!!
+- optimize coinDetail page so that chart also has a waiting state
+- fix the error states and loading states and texts for all pages
