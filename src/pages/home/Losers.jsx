@@ -1,19 +1,43 @@
-import { useEffect, useState } from "react";
-import SortedArray from "./SortCoinsByPriceChange.js";
+import { useEffect, useState, useMemo } from "react";
 import CurrencyItem from "./CurrencyItem.jsx";
 import MetaData from "../../data/MetaDataof2kCoins.json";
+import offlineData from "../../data/CoinPaprika-Top2k.json";
+
+const formatter = new Intl.NumberFormat("en", {
+  notation: "compact",
+  maximumFractionDigits: 5,
+});
 
 function Losers() {
   const [timeframe, setTimeframe] = useState("15m");
-  const [losersArray, setLosersArray] = useState([]);
+  const [fullData, setFullData] = useState(offlineData);
 
   useEffect(() => {
-    const sortedArr = SortedArray(timeframe);
-    setLosersArray([]);
-    for (let x = 1; x < 8; x++) {
-      setLosersArray((c) => [...c, sortedArr[sortedArr.length - x]]);
+    let cancelled = false;
+    async function fetchLive() {
+      try {
+        const res = await fetch("https://api.coinpaprika.com/v1/tickers");
+        if (!res.ok) throw new Error(`Status: ${res.status}`);
+        const data = await res.json();
+        if (!cancelled) setFullData(data);
+      } catch (err) {
+        console.warn("Live losers fetch failed – using offline data.", err);
+      }
     }
-  }, [timeframe]);
+    fetchLive();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const losersArray = useMemo(() => {
+    const sorted = [...fullData].sort(
+      (a, b) =>
+        a.quotes.USD[`percent_change_${timeframe}`] -
+        b.quotes.USD[`percent_change_${timeframe}`]
+    );
+    return sorted.slice(0, 7);
+  }, [fullData, timeframe]);
 
   return (
     <>
@@ -35,14 +59,18 @@ function Losers() {
           <option value="1y">1 year</option>
         </select>
       </div>
-      {losersArray.map((item) => (
+      {losersArray.map((item, index) => (
         <CurrencyItem
-          key={crypto.randomUUID()}
-          url={MetaData[item?.symbol]?.url}
+          key={item.id || `${item.symbol}-${index}`}
+          id_={MetaData[item.symbol]?.id}
+          url={MetaData[item.symbol]?.url}
           rank={item.rank}
           symbol={item.symbol}
-          price={item.quotes.USD.price}
-          changePercent={item.quotes.USD[`percent_change_${timeframe}`]}
+          name={item.name}
+          price={formatter.format(item.quotes.USD.price)}
+          changePercent={item.quotes.USD[
+            `percent_change_${timeframe}`
+          ]?.toFixed(2)}
         />
       ))}
     </>

@@ -5,3 +5,6 @@
 - bring back the Strict Mode
 
 -Converter: crypto to crypto = NaN ... FIX IT
+
+- add a btn to scroll to top in the landing page
+- REFACTOR the coinDetail index page, 500+ lines of code!!

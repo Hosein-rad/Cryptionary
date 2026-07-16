@@ -1,52 +1,59 @@
 import { useEffect, useState, useCallback } from "react";
-import MiniChart from "./MiniChart";
 import { useNavigate } from "react-router-dom";
 import Sparkline from "./Sparkline";
-import coinsData from "../../data/CoinGeckoMarket.json";
+import offlineData from "../../data/CoinGeckoMarket.json";
 
 const COINS_PER_PAGE = 250;
 
 function CoinsList() {
-  const [page, setPage] = useState(1); // number of loaded pages (250 coins each)
-  const [fullData, setFullData] = useState(coinsData); // all loaded coins
+  const [page, setPage] = useState(0);
+  const [fullData, setFullData] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [offlineUsed, setOfflineUsed] = useState(false);
   const navigate = useNavigate();
+  const formatter = new Intl.NumberFormat("en", {
+    notation: "compact",
+    maximumFractionDigits: 2,
+  });
 
-  // Fetch a single API page
-  const fetchPage = useCallback(async (pageNum) => {
-    setLoading(true);
-    try {
-      const res = await fetch(
-        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${COINS_PER_PAGE}&page=${pageNum}&sparkline=false&price_change_percentage=1h,24h,7d,14d,30d,200d,1y`
-      );
-      const data = await res.json();
-      setFullData((prev) => {
-        // avoid duplicates by id
-        const ids = new Set(prev.map((c) => c.id));
-        return [...prev, ...data.filter((c) => !ids.has(c.id))];
-      });
-      console.log("fetched", fullData);
-    } catch (err) {
-      console.error("CoinGecko fetch failed:", err);
-      const offlineData = coinsData;
-      setFullData((prev) => {
-        // avoid duplicates by id
-        const ids = new Set(prev.map((c) => c.id));
-        return [...prev, ...offlineData.filter((c) => !ids.has(c.id))];
-      });
-      console.log("NOT fetched", fullData);
-    } finally {
-      setLoading(false);
-    }
+  const fetchPage = useCallback(
+    async (pageNum) => {
+      setLoading(true);
+      try {
+        const res = await fetch(
+          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${COINS_PER_PAGE}&page=${pageNum}&sparkline=false&price_change_percentage=1h,24h,7d,14d,30d,200d,1y`
+        );
+        if (!res.ok) throw new Error(`Status: ${res.status}`);
+        const data = await res.json();
+
+        setFullData((prev) => {
+          if (pageNum === 1) {
+            return data;
+          }
+
+          const ids = new Set(prev.map((c) => c.id));
+          return [...prev, ...data.filter((c) => !ids.has(c.id))];
+        });
+      } catch (err) {
+        console.error("CoinGecko fetch failed:", err);
+
+        if (pageNum === 1 && !offlineUsed) {
+          setFullData(offlineData);
+          setOfflineUsed(true);
+        }
+      } finally {
+        setLoading(false);
+      }
+    },
+    [offlineUsed]
+  );
+
+  useEffect(() => {
+    setPage(1);
+    fetchPage(1);
   }, []);
 
-  // Initial load: first page
-  useEffect(() => {
-    fetchPage(1);
-  }, [fetchPage]);
-
-  // Load more pages when the user clicks "Add 250"
   const handleAdd250 = () => {
     const nextPage = page + 1;
     setPage(nextPage);
@@ -63,8 +70,7 @@ function CoinsList() {
     <div
       className="flex flex-col items-center"
       style={{
-        backgroundImage:
-          "url('https://ghab24.com/movafaghiat/media/appmedia/image/GHAB%20MEDIA%20DESKTOP%201025-min.jpg')",
+        backgroundImage: "url('https:jpg')",
         backgroundPosition: "center",
         backgroundSize: "auto",
         backgroundRepeat: "repeat",
@@ -83,7 +89,7 @@ function CoinsList() {
             <th className="w-[7%]">7d (%)</th>
             <th className="w-[13%]">Volume (24h)</th>
             <th className="w-[12%]">Market Cap</th>
-            <th className="w-[15%]">1year overview</th>
+            <th className="w-[15%]">1 year overview</th>
           </tr>
         </thead>
         <tbody>
@@ -98,7 +104,6 @@ function CoinsList() {
                 className="text-[12px] text-white hover:bg-[rgba(0,200,255,0.5)] duration-300 cursor-pointer"
                 onClick={() => navigate(`/coin/${item.id}`)}
               >
-                {/* Favourite star */}
                 <td
                   onClick={(e) => {
                     e.stopPropagation();
@@ -128,42 +133,39 @@ function CoinsList() {
                 </td>
 
                 <td className="text-center font-bold">
-                  ${item.current_price?.toLocaleString()}
+                  ${formatter.format(item.current_price)}
                 </td>
 
                 <td className="text-center">
-                  {item.price_change_percentage_1h_in_currency?.toFixed(1) ??
-                    "–"}
-                  %
+                  {item.price_change_percentage_1h_in_currency != null
+                    ? item.price_change_percentage_1h_in_currency.toFixed(1) +
+                      "%"
+                    : "–"}
                 </td>
 
                 <td className="text-center">
-                  {item.price_change_percentage_24h_in_currency?.toFixed(1) ??
-                    "–"}
-                  %
+                  {item.price_change_percentage_24h_in_currency != null
+                    ? item.price_change_percentage_24h_in_currency.toFixed(1) +
+                      "%"
+                    : "–"}
                 </td>
 
                 <td className="text-center">
-                  {item.price_change_percentage_7d_in_currency?.toFixed(1) ??
-                    "–"}
-                  %
+                  {item.price_change_percentage_7d_in_currency != null
+                    ? item.price_change_percentage_7d_in_currency.toFixed(1) +
+                      "%"
+                    : "–"}
                 </td>
 
                 <td className="text-center font-medium">
-                  ${item.total_volume?.toLocaleString()}
+                  ${formatter.format(item.total_volume)}
                 </td>
 
                 <td className="text-center font-medium">
-                  ${item.market_cap?.toLocaleString()}
+                  ${formatter.format(item.market_cap)}
                 </td>
 
                 <td className="text-center">
-                  {/* <MiniChart
-                    currentPrice={item.current_price}
-                    percentChange24h={
-                      item.price_change_percentage_24h_in_currency
-                    }
-                  /> */}
                   <Sparkline
                     currentPrice={item.current_price}
                     percentChanges={{
@@ -188,7 +190,6 @@ function CoinsList() {
         </tbody>
       </table>
 
-      {/* Pagination */}
       <div className="flex my-5 gap-10">
         <button
           onClick={handleAdd250}

@@ -1,20 +1,45 @@
-import { useEffect, useState } from "react";
-import SortedArray from "./SortCoinsByPriceChange.js";
+import { useEffect, useState, useMemo } from "react";
 import CurrencyItem from "./CurrencyItem.jsx";
 import MetaData from "../../data/MetaDataof2kCoins.json";
+import offlineData from "../../data/CoinPaprika-Top2k.json";
+import { useNavigate } from "react-router-dom";
+
+const formatter = new Intl.NumberFormat("en", {
+  notation: "compact",
+  maximumFractionDigits: 5,
+});
 
 function Gainers() {
   const [timeframe, setTimeframe] = useState("15m");
-  const [gainersArray, setGainersArray] = useState([]);
+  const [fullData, setFullData] = useState(offlineData);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const sortedArr = SortedArray(timeframe);
-    setGainersArray([]);
-
-    for (let x = 0; x < 7; x++) {
-      setGainersArray((c) => [...c, sortedArr[x]]);
+    let cancelled = false;
+    async function fetchLive() {
+      try {
+        const res = await fetch("https://api.coinpaprika.com/v1/tickers");
+        if (!res.ok) throw new Error(`Status: ${res.status}`);
+        const data = await res.json();
+        if (!cancelled) setFullData(data);
+      } catch (err) {
+        console.warn("Live gainers fetch failed – using offline data.", err);
+      }
     }
-  }, [timeframe]);
+    fetchLive();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const gainersArray = useMemo(() => {
+    const sorted = [...fullData].sort(
+      (a, b) =>
+        b.quotes.USD[`percent_change_${timeframe}`] -
+        a.quotes.USD[`percent_change_${timeframe}`]
+    );
+    return sorted.slice(0, 7);
+  }, [fullData, timeframe]);
 
   return (
     <>
@@ -44,14 +69,18 @@ function Gainers() {
           <option value="1y">1 year</option>
         </select>
       </div>
-      {gainersArray.map((item) => (
+      {gainersArray.map((item, index) => (
         <CurrencyItem
-          key={crypto.randomUUID()}
+          key={item.id || `${item.symbol}-${index}`}
           url={MetaData[item?.symbol]?.url}
+          id_={MetaData[item.symbol]?.id}
           rank={item.rank}
           symbol={item.symbol}
-          price={item.quotes.USD.price}
-          changePercent={item.quotes.USD[`percent_change_${timeframe}`]}
+          price={formatter.format(item.quotes.USD.price)}
+          changePercent={item.quotes.USD[`percent_change_${timeframe}`].toFixed(
+            2
+          )}
+          onClick={() => navigate(`/coin/${item.id}`)}
         />
       ))}
     </>

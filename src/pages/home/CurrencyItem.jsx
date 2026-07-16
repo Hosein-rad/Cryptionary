@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 export default function CurrencyItem({
+  id_,
   url,
   rank,
   symbol,
@@ -12,9 +15,12 @@ export default function CurrencyItem({
   price,
   changePercent,
 }) {
+  const navigate = useNavigate();
+
   return (
     <div
       className="py-1 mx-7 grid grid-flow-col grid-cols-[2fr_2fr_5fr_3fr] border-b-1 border-dotted border-gray-600 hover:rounded-full hover:bg-sky-200 hover:scale-105 duration-300 cursor-pointer"
+      onClick={() => navigate(`/coin/${id_}`)}
     >
       {rank && <p className="my-auto font-extralight text-center">{rank}. </p>}
 
@@ -22,10 +28,13 @@ export default function CurrencyItem({
         src={url}
         alt={`${symbol} Logo`}
         className="mx-auto size-10 rounded-full shadow-md shadow-gray-500"
+        onError={(e) => {
+          e.target.style.opacity = "0";
+        }}
       />
 
       {name && <div>{name} </div>}
-      {price && <div className="my-auto">{price?.toFixed(16)} $</div>}
+      {price && <div className="my-auto">{price} $</div>}
       {change1h && <div>{change1h} </div>}
       {change1d && <div>{change1d} </div>}
       {change1w && <div>{change1w} </div>}

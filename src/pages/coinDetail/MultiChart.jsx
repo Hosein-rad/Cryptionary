@@ -1,6 +1,11 @@
 import { Chart as ChartComponent } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
 
+const formatter = new Intl.NumberFormat("en", {
+  notation: "compact",
+  maximumFractionDigits: 2,
+});
+
 // ------------------- CUSTOM CROSSHAIR ------------------- //
 const customCrosshair = {
   id: "customCrosshair",
@@ -61,7 +66,7 @@ const options1 = {
       position: "left",
       title: { display: true, text: "Price (USD)", color: "white" },
       grid: { drawOnChartArea: false },
-      ticks: { color: "white" },
+      ticks: { color: "white", callback: (value) => formatter.format(value) },
     },
     yVolume: {
       type: "linear",
@@ -69,7 +74,7 @@ const options1 = {
       position: "right",
       title: { display: true, text: "Volume", color: "white" },
       grid: { drawOnChartArea: true },
-      ticks: { color: "white" },
+      ticks: { color: "white", callback: (value) => formatter.format(value) },
     },
   },
 };
@@ -99,7 +104,7 @@ const options2 = {
       position: "left",
       title: { display: true, text: "Market Cap", color: "white" },
       grid: { drawOnChartArea: true },
-      ticks: { color: "white" },
+      ticks: { color: "white", callback: (value) => formatter.format(value) },
     },
   },
 };

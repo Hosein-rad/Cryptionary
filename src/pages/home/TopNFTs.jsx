@@ -1,57 +1,63 @@
-import { useRef, useState } from "react";
-import TrendingCoins from "../../data/CoinGecko-Trendings.json";
+"use client";
 
-function TopNFTs() {
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+
+function TopNFTs({ data }) {
   const [text, setText] = useState("");
   const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef();
-  let jsx = [];
+  const tooltipRef = useRef(null);
+  const isVisibleRef = useRef(false);
+  const textRef = useRef("");
+  const navigate = useNavigate();
 
-  const mouseLocation = (event) => {
-    const x = event.pageX;
-    const y = event.pageY;
-    if (ref.current) {
-      ref.current.style.top = `${y - 50}px`;
-      ref.current.style.left = `${x - 50}px`;
+  const handleMouseMove = useCallback((event) => {
+    if (!isVisibleRef.current) return;
+    if (tooltipRef.current) {
+      tooltipRef.current.style.top = `${event.pageY - 50}px`;
+      tooltipRef.current.style.left = `${event.pageX}px`;
+      tooltipRef.current.style.transform = "translateX(-50%)";
     }
-  };
+  }, []);
 
-  for (let x = 0; x < Object.keys(TrendingCoins.nfts).length; x++) {
-    jsx.push(
-      <a
-        href={"#"}
-        key={TrendingCoins.nfts[x].nft_contract_id}
-        className="m-2 border-none hover:scale-110 duration-150"
+  useEffect(() => {
+    document.addEventListener("mousemove", handleMouseMove);
+    return () => document.removeEventListener("mousemove", handleMouseMove);
+  }, [handleMouseMove]);
+
+  const nfts = data?.nfts;
+  if (!nfts || !Array.isArray(nfts)) return null;
+
+  const jsx = nfts.map((nft) => (
+    <div
+      key={nft.nft_contract_id}
+      className="m-2 border-none hover:scale-110 rounded-full duration-150"
+    >
+      <img
+        src={nft.thumb}
+        alt={nft.name + " Logo"}
+        className="size-20 border-none rounded-full shadow-gray-500 shadow-lg hover:shadow-gray-800 duration-500"
+        onMouseEnter={() => {
+          textRef.current = nft.name;
+          isVisibleRef.current = true;
+          setText(nft.name);
+          setIsVisible(true);
+        }}
         onMouseLeave={() => {
-          document.removeEventListener("mousemove", mouseLocation);
+          isVisibleRef.current = false;
           setText("");
           setIsVisible(false);
         }}
-      >
-        <img
-          onMouseEnter={() => {
-            document.addEventListener("mousemove", mouseLocation);
-            setText(TrendingCoins.nfts[x].name);
-            setIsVisible(true);
-          }}
-          onMouseLeave={() => {
-            document.removeEventListener("mousemove", mouseLocation);
-            setText("");
-            setIsVisible(false);
-          }}
-          src={TrendingCoins.nfts[x].thumb}
-          alt={TrendingCoins.nfts[x].name + "Logo"}
-          className="size-20 border-none rounded-full shadow-gray-500 shadow-lg hover:shadow-gray-800 duration-500"
-        />
-      </a>
-    );
-  }
+      />
+    </div>
+  ));
+
   return (
     <div className="mx-4 my-10 flex flex-wrap justify-center items-center">
-      {jsx.map((item) => item)}
+      {jsx}
       {isVisible && (
         <div
-          ref={ref}
+          ref={tooltipRef}
           className="p-1 absolute text-md font-bold border-l-2 pointer-events-none border-2 border-black bg-white opacity-50 rounded-md"
         >
           {text}

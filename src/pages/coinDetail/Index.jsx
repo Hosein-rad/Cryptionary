@@ -7,6 +7,10 @@ export default function CoinDetail() {
   const [coinData, setCoinData] = useState(null);
   const [chartData, setChartData] = useState(null);
   const [error, setError] = useState(null);
+  const formatter = new Intl.NumberFormat("en", {
+    notation: "compact",
+    maximumFractionDigits: 2,
+  });
 
   useEffect(() => {
     if (!coinId) return;
@@ -146,7 +150,7 @@ export default function CoinDetail() {
           {/* price and price change % */}
           <div className="pt-3 w-full flex flex-row items-end">
             <p className="text-5xl">
-              ${coinData.market_data.current_price.usd}
+              ${formatter.format(coinData.market_data.current_price.usd)}
             </p>
             <div className="w-full mx-2 my-1 flex flex-row items-end justify-start text-center">
               {Number(coinData.market_data.price_change_percentage_24h) < 0 ? (
@@ -174,9 +178,9 @@ export default function CoinDetail() {
               style={{ width: `${barWidth}%` }}
             ></div>
             <div className="mt-2 flex justify-between">
-              <p>${coinData.market_data.low_24h.usd}</p>
+              <p>${formatter.format(coinData.market_data.low_24h.usd)}</p>
               <p>24h Range</p>
-              <p>${coinData.market_data.high_24h.usd}</p>
+              <p>${formatter.format(coinData.market_data.high_24h.usd)}</p>
             </div>
           </div>
 
@@ -188,7 +192,9 @@ export default function CoinDetail() {
                 <span className="my-auto animate-pulse text-xs text-green-500">
                   ⏺{" "}
                 </span>
-                <span>{coinData.watchlist_portfolio_users} Added</span>
+                <span>
+                  {formatter.format(coinData.watchlist_portfolio_users)} Added
+                </span>
               </span>
             </button>
           </div>
@@ -197,30 +203,35 @@ export default function CoinDetail() {
           <div className="w-full flex flex-col">
             <div className="w-full flex justify-between border-b">
               <p>Market Cap</p>
-              <p>${coinData.market_data.market_cap.usd}</p>
+              <p>${formatter.format(coinData.market_data.market_cap.usd)}</p>
             </div>
             <div className="w-full flex justify-between border-b">
               <p>Fully Diluted Valuation</p>
-              <p>${coinData.market_data.fully_diluted_valuation.usd}</p>
+              <p>
+                $
+                {formatter.format(
+                  coinData.market_data.fully_diluted_valuation.usd
+                )}
+              </p>
             </div>
             <div className="w-full flex justify-between border-b">
               <p>24 Hour Trading Vol</p>
-              <p>${coinData.market_data.total_volume.usd}</p>
+              <p>${formatter.format(coinData.market_data.total_volume.usd)}</p>
             </div>
             <div className="w-full flex justify-between border-b">
               <p>Circulating Supply</p>
-              <p>{coinData.market_data.circulating_supply}</p>
+              <p>{formatter.format(coinData.market_data.circulating_supply)}</p>
             </div>
             <div className="w-full flex justify-between border-b">
               <p>Total Supply</p>
-              <p>{coinData.market_data.total_supply}</p>
+              <p>{formatter.format(coinData.market_data.total_supply)}</p>
             </div>
             <div className="w-full flex justify-between border-b">
               <p>Max Supply</p>
               <p>
                 {coinData.market_data.max_supply_infinite
                   ? "∞"
-                  : coinData.market_data.max_supply}
+                  : formatter.format(coinData.market_data.max_supply)}
               </p>
             </div>
           </div>
@@ -365,18 +376,20 @@ export default function CoinDetail() {
             <div className="w-full flex justify-between border-b">
               <p>24h Range</p>
               <p>
-                ${coinData.market_data.low_24h.usd.toLocaleString()} – $
-                {coinData.market_data.high_24h.usd.toLocaleString()}
+                ${formatter.format(coinData.market_data.low_24h.usd)} – $
+                {formatter.format(coinData.market_data.high_24h.usd)}
               </p>
             </div>
             {/* All-Time High */}
             <div className="w-full flex justify-between border-b">
               <p>All-Time High</p>
               <div className="text-right">
-                <p>${coinData.market_data.ath.usd.toLocaleString()}</p>
+                <p>${formatter.format(coinData.market_data.ath.usd)}</p>
                 <p className="text-xs text-red-400">
-                  {coinData.market_data.ath_change_percentage.usd.toFixed(1)}%
-                  (from ATH)
+                  {formatter.format(
+                    coinData.market_data.ath_change_percentage.usd
+                  )}
+                  % (from ATH)
                 </p>
                 <p className="text-xs text-gray-400">
                   {new Date(
@@ -393,7 +406,7 @@ export default function CoinDetail() {
             <div className="w-full flex justify-between border-b">
               <p>All-Time Low</p>
               <div className="text-right">
-                <p>${coinData.market_data.atl.usd.toLocaleString()}</p>
+                <p>${formatter.format(coinData.market_data.atl.usd)}</p>
                 <p className="text-xs text-green-400">
                   {coinData.market_data.atl_change_percentage.usd.toFixed(1)}%
                   (from ATL)

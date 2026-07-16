@@ -1,60 +1,64 @@
 "use client";
 
-import { useState, useRef } from "react";
-import TrendingCoins from "../../data/CoinGecko-Trendings.json";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
-function TopCoins() {
+function TopCoins({ data }) {
   const [text, setText] = useState("");
   const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef();
-  let jsx = [];
+  const tooltipRef = useRef(null);
+  const isVisibleRef = useRef(false);
+  const textRef = useRef("");
+  const navigate = useNavigate();
 
-  const mouseLocation = (event) => {
-    const x = event.pageX;
-    const y = event.pageY;
-    if (ref.current) {
-      ref.current.style.top = `${y - 50}px`;
-      ref.current.style.left = `${x - 50}px`;
+  const handleMouseMove = useCallback((event) => {
+    if (!isVisibleRef.current) return;
+    if (tooltipRef.current) {
+      tooltipRef.current.style.top = `${event.pageY - 50}px`;
+      tooltipRef.current.style.left = `${event.pageX}px`;
+      tooltipRef.current.style.transform = "translateX(-50%)";
     }
-  };
+  }, []);
 
-  for (let x = 0; x < Object.keys(TrendingCoins.coins).length; x++) {
-    jsx.push(
-      <a
-        href={"#"}
-        key={TrendingCoins.coins[x].item.coin_id}
-        className="m-2 border-none hover:scale-110 duration-150"
+  useEffect(() => {
+    document.addEventListener("mousemove", handleMouseMove);
+    return () => document.removeEventListener("mousemove", handleMouseMove);
+  }, [handleMouseMove]);
+
+  const coins = data?.coins;
+  if (!coins || !Array.isArray(coins)) return null;
+
+  const jsx = coins.map((coin) => (
+    <div
+      onClick={() => navigate(`/coin/${coin.item.id}`)}
+      key={coin.item.coin_id}
+      className="relative m-2 border-none hover:scale-110 rounded-full duration-150 cursor-pointer"
+    >
+      <img
+        src={coin.item.small}
+        alt={coin.item.name + " Logo"}
+        className="size-15 border-none rounded-full shadow-gray-500 shadow-lg hover:shadow-gray-700 duration-500"
+        onMouseEnter={() => {
+          textRef.current = coin.item.name;
+          isVisibleRef.current = true;
+          setText(coin.item.name);
+          setIsVisible(true);
+        }}
         onMouseLeave={() => {
-          document.removeEventListener("mousemove", mouseLocation);
+          isVisibleRef.current = false;
           setText("");
           setIsVisible(false);
         }}
-      >
-        <img
-          onMouseEnter={() => {
-            document.addEventListener("mousemove", mouseLocation);
-            setText(TrendingCoins.coins[x].item.name);
-            setIsVisible(true);
-          }}
-          onMouseLeave={() => {
-            document.removeEventListener("mousemove", mouseLocation);
-            setText("");
-            setIsVisible(false);
-          }}
-          src={TrendingCoins.coins[x].item.small}
-          alt={TrendingCoins.coins[x].item.name + "Logo"}
-          className="size-15 border-none rounded-full shadow-gray-500 shadow-lg hover:shadow-gray-700 duration-500"
-        />
-      </a>
-    );
-  }
+      />
+    </div>
+  ));
 
   return (
     <div className="mx-4 my-4 flex flex-wrap justify-center items-center">
-      {jsx.map((item) => item)}
+      {jsx}
       {isVisible && (
         <div
-          ref={ref}
+          ref={tooltipRef}
           className="p-1 absolute text-md font-bold pointer-events-none border-2 border-black bg-white opacity-50 rounded-md"
         >
           {text}
