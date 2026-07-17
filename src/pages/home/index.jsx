@@ -57,11 +57,50 @@ function Home() {
       {/* Loading overlay */}
       {isLoading && (
         <div className="fixed inset-0 flex items-center justify-center bg-[#0C2A43] z-50">
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-12 h-12 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin" />
-            <p className="text-white text-lg font-semibold">
-              Loading Cryptionary...
-            </p>
+          <div className="flex flex-col items-center gap-4 ">
+            <p className="text-white text-lg font-semibold">Loading...</p>
+            <svg viewBox="0 0 128 64" className="text-purple-700 text-5xl">
+              <style>{`
+    #back2089, #front2089 {
+      fill: none;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    #back2089 {
+      stroke: currentColor;
+      opacity: 0.1;
+    }
+
+    #front2089 {
+      stroke: currentColor;
+      stroke-dasharray: 260;
+      stroke-dashoffset: 0;
+      animation: dash_6821 1.4s linear infinite;
+    }
+
+    @keyframes dash_6821 {
+      0% {
+        stroke-dashoffset: 260;
+        opacity: 1;
+      }
+      100% {
+        stroke-dashoffset: 0;
+        opacity: .5;
+      }
+    }
+  `}</style>
+
+              <polyline
+                id="back2089"
+                points="0,45.486 38.514,45.486 44.595,33.324 50.676,45.486 57.771,45.486 62.838,55.622 71.959,9 80.067,63.729 84.122,45.486 97.297,45.486 103.379,40.419 110.473,45.486 150,45.486"
+              />
+              <polyline
+                id="front2089"
+                points="0,45.486 38.514,45.486 44.595,33.324 50.676,45.486 57.771,45.486 62.838,55.622 71.959,9 80.067,63.729 84.122,45.486 97.297,45.486 103.379,40.419 110.473,45.486 150,45.486"
+              />
+            </svg>
           </div>
         </div>
       )}

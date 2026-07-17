@@ -1,4 +1,16 @@
+import { useState } from "react";
+import useWatchlist from "../../hooks/useWatchlist/useWatchlist";
+
 const DetailsCol = ({ coinData }) => {
+  const { toggleCoin, isWatched } = useWatchlist();
+
+  // for "categories" more than 3
+  const [showAllCategories, setShowAllCategories] = useState(false);
+  const visibleCategories = showAllCategories
+    ? coinData.categories
+    : coinData.categories.slice(0, 3);
+  const hasMore = coinData.categories.length > 3;
+
   const formatter = new Intl.NumberFormat("en", {
     notation: "compact",
     maximumFractionDigits: 2,
@@ -22,7 +34,7 @@ const DetailsCol = ({ coinData }) => {
 
   const barWidth = getBarWidth();
   return (
-    <div className="w-1/3 h-full px-5 flex flex-col items-center justify-start border-r-2 overflow-y-scroll">
+    <div className="w-1/3 h-full px-5 pb-15 flex flex-col items-center justify-start border-r-2 overflow-y-scroll">
       {/* icon - name - symbol - rank */}
       <div className="w-full h-fit mb-2 flex flex-row items-end justify-start">
         <img
@@ -81,14 +93,26 @@ const DetailsCol = ({ coinData }) => {
 
       {/* Watchlist */}
       <div className="flex w-full">
-        <button className="p-2 mx-2 w-full flex justify-between rounded-lg bg-gray-600 text-left">
-          <span>🖈Add to Watchlist </span>
-          <span>
-            <span className="my-auto animate-pulse text-xs text-blue-500">
-              ⏺
-              {" "}
+        <button
+          className={`p-2 mx-2 w-full flex justify-between rounded-lg text-left cursor-pointer ${
+            isWatched(coinData.id) ? "bg-gray-600" : "bg-green-600"
+          }`}
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleCoin(coinData.id);
+          }}
+        >
+          <span className="text-sm my-auto">
+            {" "}
+            {isWatched(coinData.id)
+              ? "★Remove from Watchlist"
+              : "☆Add to Watchlist"}
+          </span>
+          <span className="text-sm my-auto">
+            <span className="my-auto animate-pulse text-xs text-blue-300">
+              ⏺{" "}
             </span>
-            <span>
+            <span className="text-sm my-auto">
               {formatter.format(coinData.watchlist_portfolio_users)}
               <svg
                 width="20"
@@ -268,14 +292,22 @@ const DetailsCol = ({ coinData }) => {
         <div className="w-full flex justify-between border-b">
           <p>Categories</p>
           <div className="flex flex-wrap justify-end gap-1">
-            {coinData.categories.map((cat) => (
+            {visibleCategories.map((cat) => (
               <span
                 key={cat}
-                className="bg-cyan-800 text-cyan-200 px-2 py-0.5 rounded-full text-xs"
+                className="bg-cyan-900 text-cyan-200 px-2 py-0.5 rounded-full text-xs"
               >
                 {cat}
               </span>
             ))}
+            {hasMore && (
+              <button
+                onClick={() => setShowAllCategories(!showAllCategories)}
+                className="text-cyan-300 text-xs underline hover:text-cyan-100 cursor-pointer duration-300"
+              >
+                {showAllCategories ? "Show less" : "Show more"}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -423,19 +455,6 @@ const DetailsCol = ({ coinData }) => {
           </div>
         )}
       </div>
-
-      <button
-        className="p-5 rounded-full bg-black"
-        onClick={() => console.log(coinData)}
-      >
-        coin data LOG
-      </button>
-      {/* <button
-            className="p-5 rounded-full bg-black"
-            onClick={() => console.log(chartData)}
-          >
-            chart data LOG
-          </button> */}
     </div>
   );
 };

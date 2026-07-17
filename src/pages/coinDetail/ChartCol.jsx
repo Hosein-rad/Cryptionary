@@ -116,7 +116,10 @@ const options2 = {
 // ------------------- MULTI CHART COMPONENT ------------------- //
 function ChartCol({ chartData }) {
   const priceData = chartData.prices.map(([t, v]) => ({ x: t, y: v }));
-  const marketCapData = chartData.market_caps.map(([t, v]) => ({ x: t, y: v }));
+  const marketCapData = chartData.market_caps.map(([t, v]) => ({
+    x: t,
+    y: v,
+  }));
   const volumeData = chartData.total_volumes.map(([t, v]) => ({ x: t, y: v }));
 
   const dataset1 = [
@@ -155,7 +158,7 @@ function ChartCol({ chartData }) {
   ];
 
   return (
-    <div>
+    <div className="w-full">
       {/* Fixed height container is crucial for the crosshair to be visible */}
       <div style={{ height: "400px", width: "100%" }}>
         <ChartComponent

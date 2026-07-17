@@ -7,3 +7,6 @@
 - REFACTOR the coinDetail index page, 500+ lines of code!!
 - optimize coinDetail page so that chart also has a waiting state
 - fix the error states and loading states and texts for all pages
+- sticky thead not sticking ... (both in coinsList & watchlist)
+
+- add toasts

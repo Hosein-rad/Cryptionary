@@ -32,7 +32,7 @@ function Boxes() {
     <div
       className="grid grid-cols-2 grid-rows-2 gap-x-3 gap-y-10 w-full h-auto justify-center text-center p-2"
       style={{
-        backgroundImage: `url("https://ghab24.com/movafaghiat/media/appmedia/image/GHAB%20MEDIA%20DESKTOP%201025-min.jpg")`,
+        backgroundImage: "url('/coinsList-bg.webp')",
         backgroundPosition: "center",
         backgroundSize: "cover",
         backgroundRepeat: "repeat",

@@ -49,6 +49,10 @@ function TopNFTs({ data }) {
           setText("");
           setIsVisible(false);
         }}
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = "/cryptionary-icon.png";
+        }}
       />
     </div>
   ));

@@ -2,13 +2,15 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Sparkline from "./Sparkline";
 import offlineData from "../../data/CoinGeckoMarket.json";
+import useWatchlist from "../../hooks/useWatchlist/useWatchlist";
 
 const COINS_PER_PAGE = 250;
 
 function CoinsList({ onLoaded }) {
   const [page, setPage] = useState(0);
   const [fullData, setFullData] = useState([]);
-  const [favorites, setFavorites] = useState([]);
+  // const [favorites, setFavorites] = useState([]);
+  const { toggleCoin, isWatched } = useWatchlist();
   const [loading, setLoading] = useState(false);
   const [offlineUsed, setOfflineUsed] = useState(false);
   const hasCalledLoaded = useRef(false);
@@ -74,26 +76,20 @@ function CoinsList({ onLoaded }) {
     fetchPage(nextPage);
   };
 
-  const toggleFavorite = useCallback((id) => {
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
-    );
-  }, []);
-
   return (
     <div
       className="flex flex-col items-center"
       style={{
-        backgroundImage: "url('https:jpg')",
+        backgroundImage: "url('/coinsList-bg.webp')",
         backgroundPosition: "center",
         backgroundSize: "auto",
         backgroundRepeat: "repeat",
         width: "100%",
       }}
     >
-      <table className="w-full">
-        <thead className="sticky top-16">
-          <tr className="w-full h-7 text-sm bg-blue-200 cursor-default">
+      <table className="relative w-full">
+        <thead className="sticky top-16 z-20">
+          <tr className="w-full h-10 text-md bg-blue-200 cursor-default">
             <th className="w-[4%]"></th>
             <th className="w-[5%]">Rank</th>
             <th className="w-[12%]">Coin</th>
@@ -108,24 +104,23 @@ function CoinsList({ onLoaded }) {
         </thead>
         <tbody>
           {fullData.map((item) => {
-            const isFav = favorites.includes(item.id);
             const shortName =
               item.name.length > 14 ? item.name.slice(0, 14) + "…" : item.name;
 
             return (
               <tr
                 key={item.id}
-                className="text-[12px] text-white hover:bg-[rgba(0,200,255,0.5)] duration-300 cursor-pointer"
+                className="text-sm text-white hover:bg-[rgba(0,200,255,0.5)] duration-300 cursor-pointer"
                 onClick={() => navigate(`/coin/${item.id}`)}
               >
                 <td
                   onClick={(e) => {
                     e.stopPropagation();
-                    toggleFavorite(item.id);
+                    toggleCoin(item.id);
                   }}
                   className="text-center text-amber-300 cursor-copy hover:scale-120"
                 >
-                  {isFav ? "★" : "☆"}
+                  {isWatched(item.id) ? "★" : "☆"}
                 </td>
 
                 <td className="text-center font-medium underline">
@@ -143,9 +138,7 @@ function CoinsList({ onLoaded }) {
                       e.target.src = "/cryptionary-icon.png";
                     }}
                   />
-                  <span className="text-shadow-cyan-300 font-bold text-shadow-xs inline">
-                    {shortName}
-                  </span>
+                  <span className="font-bold inline">{shortName}</span>
                 </td>
 
                 <td className="text-center font-bold">
