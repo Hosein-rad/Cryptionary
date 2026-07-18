@@ -2,6 +2,7 @@ import { useCallback, useState, useRef, useEffect } from "react";
 import Hero from "./Hero";
 import Boxes from "./Boxes";
 import CoinsList from "./CoinsList";
+import ScrollToTop from "../../components/ui/ScrollToTop";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -119,6 +120,9 @@ function Home() {
         {/* Pass the callback – CoinsList should call it after the first fetch + a tiny setTimeout to allow SVG render */}
         <CoinsList onLoaded={handleDataReady} />
       </div>
+
+      {/* a button that scrolls to the top of the page on click */}
+      <ScrollToTop />
     </div>
   );
 }
