@@ -19,7 +19,7 @@ function Boxes() {
       const data = await res.json();
       setTrendingData(data);
     } catch (err) {
-      console.error("CoinGecko fetch failed:", err);
+      // console.error("CoinGecko fetch failed:", err);
       setTrendingData(offlineData);
     }
   };

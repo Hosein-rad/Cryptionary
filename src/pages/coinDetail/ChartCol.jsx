@@ -158,7 +158,7 @@ function ChartCol({ chartData }) {
   ];
 
   return (
-    <div className="w-full">
+    <div className="w-full mt-10">
       {/* Fixed height container is crucial for the crosshair to be visible */}
       <div style={{ height: "400px", width: "100%" }}>
         <ChartComponent

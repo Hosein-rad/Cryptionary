@@ -3,7 +3,6 @@ import CurrencySelect from "./CurrencySelect";
 import { FIATS } from "./fiats";
 import coins from "../../data/CoinGecko2k.json";
 
-// Popular order (used to sort the list so these appear first)
 const POPULAR_IDS = [
   "bitcoin",
   "usd",
@@ -36,8 +35,9 @@ export default function Converter() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Helper to get currency type
-  const getType = (id) => allCurrencies.find((c) => c.id === id)?.type;
+  // Helper to get full currency object
+  const getCurrencyObj = (id) => allCurrencies.find((c) => c.id === id);
+  const getType = (id) => getCurrencyObj(id)?.type;
 
   const handleConvert = async () => {
     if (!amount || isNaN(amount) || amount <= 0) {
@@ -49,41 +49,48 @@ export default function Converter() {
 
     const fromType = getType(fromCurrency);
     const toType = getType(toCurrency);
+    const fromSymbol = getCurrencyObj(fromCurrency)?.symbol?.toLowerCase();
+    const toSymbol = getCurrencyObj(toCurrency)?.symbol?.toLowerCase();
 
     try {
-      // Build the URL – exactly one fetch, always with a crypto as base
-      let crypto, vs;
-      if (fromType === "crypto") {
-        crypto = fromCurrency;
-        vs = toCurrency;
+      let url, response, converted;
+
+      if (fromType === "crypto" && toType === "crypto") {
+        // Crypto → Crypto : fetch both prices in USD, then divide
+        url = `https://api.coingecko.com/api/v3/simple/price?ids=${fromCurrency},${toCurrency}&vs_currencies=usd`;
+        response = await fetch(url);
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        const data = await response.json();
+        const fromPrice = data[fromCurrency]?.usd;
+        const toPrice = data[toCurrency]?.usd;
+        if (!fromPrice || !toPrice)
+          throw new Error("Price not available for one of the coins.");
+        converted = amount * (fromPrice / toPrice);
+      } else if (fromType === "crypto" && toType === "fiat") {
+        // Crypto → Fiat : use direct pair, vs_currencies = fiat symbol
+        url = `https://api.coingecko.com/api/v3/simple/price?ids=${fromCurrency}&vs_currencies=${toSymbol}`;
+        response = await fetch(url);
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        const data = await response.json();
+        converted = amount * data[fromCurrency][toSymbol];
+      } else if (fromType === "fiat" && toType === "crypto") {
+        // Fiat → Crypto : need crypto price in fiat, then invert
+        url = `https://api.coingecko.com/api/v3/simple/price?ids=${toCurrency}&vs_currencies=${fromSymbol}`;
+        response = await fetch(url);
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        const data = await response.json();
+        converted = amount / data[toCurrency][fromSymbol];
       } else {
-        // from is fiat
-        crypto = toType === "crypto" ? toCurrency : "bitcoin";
-        vs = fromCurrency + (toType === "fiat" ? `,${toCurrency}` : "");
+        // Fiat → Fiat : use bitcoin as bridge
+        url = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=${fromSymbol},${toSymbol}`;
+        response = await fetch(url);
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        const data = await response.json();
+        const btcFrom = data.bitcoin[fromSymbol];
+        const btcTo = data.bitcoin[toSymbol];
+        converted = (amount / btcFrom) * btcTo;
       }
 
-      const res = await fetch(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${crypto}&vs_currencies=${vs}`
-      );
-      if (!res.ok) throw new Error(`API error: ${res.status}`);
-      const data = await res.json();
-
-      let converted;
-      if (fromType === "crypto") {
-        // crypto → anything: use direct rate
-        converted = amount * data[crypto][toCurrency];
-      } else {
-        // fiat → anything
-        const btcFrom = data[crypto][fromCurrency];
-        if (toType === "crypto") {
-          // fiat → crypto: invert
-          converted = amount / btcFrom;
-        } else {
-          // fiat → fiat: cross via crypto
-          const btcTo = data[crypto][toCurrency];
-          converted = (amount / btcFrom) * btcTo;
-        }
-      }
       setResult(converted.toFixed(6));
     } catch (err) {
       setError(err.message);

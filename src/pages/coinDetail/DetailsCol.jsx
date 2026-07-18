@@ -34,7 +34,7 @@ const DetailsCol = ({ coinData }) => {
 
   const barWidth = getBarWidth();
   return (
-    <div className="w-1/3 h-full px-5 pb-15 flex flex-col items-center justify-start border-r-2 overflow-y-scroll">
+    <div className="w-1/3 h-full px-5 pb-25 mt-10 flex flex-col items-center justify-start border-r-2 overflow-y-scroll">
       {/* icon - name - symbol - rank */}
       <div className="w-full h-fit mb-2 flex flex-row items-end justify-start">
         <img

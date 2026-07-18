@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ChartCol from "./ChartCol";
 import DetailsCol from "./detailsCol";
+import TopCoinsGrid from "./TopCoinsGrid ";
 
 const loadingSVG = (
   <svg viewBox="0 0 128 64">
@@ -109,10 +110,13 @@ export default function CoinDetail() {
   }, [error, coinData, chartData, fetchData]);
 
   return (
-    <div className="relative w-full h-screen flex flex-row  justify-evenly pt-20 text-white overflow-hidden">
+    <div className="relative w-full h-screen flex flex-row  justify-evenly text-white overflow-hidden">
       {!coinId && (
-        <div className="text-2xl mt-10">
-          Select a coin first to see the details and charts here!
+        <div>
+          <p className="my-5 text-center text-lg">
+            Search a coin from the Searchbar above, or click on a card
+          </p>
+          <TopCoinsGrid />
         </div>
       )}
       {coinId && !coinData && (
