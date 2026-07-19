@@ -79,13 +79,6 @@ function CoinsList({ onLoaded }) {
   return (
     <div
       className="flex flex-col items-center"
-      style={{
-        backgroundImage: "url('/coinsList-bg.webp')",
-        backgroundPosition: "center",
-        backgroundSize: "auto",
-        backgroundRepeat: "repeat",
-        width: "100%",
-      }}
     >
       <table className="relative w-full">
         <thead className="sticky top-16 z-20">

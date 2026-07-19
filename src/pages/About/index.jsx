@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function About() {
   return (
-    <div className="min-h-screen w-full bg-[#0C2A43] text-white pt-24 pb-16 px-4 sm:px-8">
+    <div className="min-h-screen w-full  text-white pt-24 pb-16 px-4 sm:px-8">
       <div className="max-w-5xl mx-auto space-y-20">
         {/* Hero */}
         <section className="text-center space-y-5">

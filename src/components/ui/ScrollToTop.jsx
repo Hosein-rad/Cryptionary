@@ -60,7 +60,7 @@ export default function ScrollToTop() {
       {/* wrapper for tooltip positioning */}
       <div className="group fixed bottom-6 right-6 z-50">
         {/* tooltip */}
-        <span className="pointer-events-none absolute bottom-full right-0 mb-2 w-max rounded bg-white/70 px-2 py-1 text-xs text-black text-center font-extrabold opacity-0 transition-opacity group-hover:opacity-100">
+        <span className="pointer-events-none absolute bottom-full right-0 mb-2 w-max rounded bg-white/70 px-2 py-1 text-xs text-black text-center font-extrabold opacity-0 transition-opacity group-hover:opacity-80">
           Back
           <br />
           to
@@ -71,8 +71,8 @@ export default function ScrollToTop() {
         <button
           onClick={scrollToTop}
           className={`p-3 rounded-full shadow-lg
-            backdrop-blur-sm bg-cyan-600/80 text-white
-            opacity-60 hover:opacity-100
+            bg-cyan-600 text-white
+            opacity-50 hover:opacity-90
             hover:scale-110 transition-transform duration-200
             cursor-pointer
             ${show ? "animate-pop-in" : "animate-pop-out"}`}

@@ -6,13 +6,67 @@
   scrollbar-width: none;
 }
 
-body {
-  background-color: #0c2a43;
-}
-
 @font-face {
   font-family: "Gorehand";
   src: url("./assets/fonts/Gorehand.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
+}
+
+/* Searchbar styles */
+@keyframes rotateShadow {
+  0% {
+    box-shadow: -2px -2px 8px 1px #aa00ff, 2px 2px 8px 1px #3700ff;
+  }
+  25% {
+    box-shadow: -2px 2px 8px 1px #aa00ff, 1px -2px 10px 2px #3700ff;
+  }
+  50% {
+    box-shadow: 2px 2px 8px 1px #aa00ff, 0px -2px 12px 3px #3700ff;
+  }
+  75% {
+    box-shadow: 2px -2px 8px 1px #aa00ff, 1px 2px 10px 2px #3700ff;
+  }
+  100% {
+    box-shadow: -2px -2px 8px 1px #aa00ff, 2px 2px 8px 1px #3700ff;
+  }
+}
+.animate-rotate-shadow {
+  animation: rotateShadow 2s infinite linear;
+}
+
+/* Navigation Dropdown styles */
+.menu-items-container {
+  overflow: visible;
+  pointer-events: none;
+}
+.menu-items-container.open {
+  pointer-events: auto;
+}
+.menu-item {
+  opacity: 0;
+  transform: translateY(-20px) scale(0.9);
+  transition: opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform, opacity;
+}
+.menu-items-container.open .menu-item {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.menu-item-glow {
+  position: absolute;
+  inset: 0px;
+  border-radius: inherit;
+  z-index: -1;
+  transition: inset 0.2s ease;
+  pointer-events: none;
+}
+.menu-item:hover .menu-item-glow {
+  inset: -7px;
+}
+.menu-item.active {
+  ring: 2px solid white;
+  ring-offset: 2px;
+  ring-offset-color: #1a202c;
 }

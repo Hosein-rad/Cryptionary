@@ -55,7 +55,6 @@ function Home() {
 
   return (
     <div className="w-dvw h-full border-0 rounded-2xl">
-      {/* Loading overlay */}
       {isLoading && (
         <div className="fixed inset-0 flex items-center justify-center bg-[#0C2A43] z-50">
           <div className="flex flex-col items-center gap-4 ">
@@ -106,7 +105,6 @@ function Home() {
         </div>
       )}
 
-      {/* Main content – rendered but invisible until everything is ready */}
       <div
         ref={contentRef}
         className={
@@ -117,11 +115,9 @@ function Home() {
       >
         <Hero />
         <Boxes />
-        {/* Pass the callback – CoinsList should call it after the first fetch + a tiny setTimeout to allow SVG render */}
         <CoinsList onLoaded={handleDataReady} />
       </div>
 
-      {/* a button that scrolls to the top of the page on click */}
       <ScrollToTop />
     </div>
   );

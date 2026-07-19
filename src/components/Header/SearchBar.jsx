@@ -4,15 +4,15 @@ import { useState, useRef, useEffect } from "react";
 import { HeaderSVGs } from "./HeaderSVGs";
 import { useNavigate } from "react-router-dom";
 
-// Props: array of coin objects (at least {id, name, symbol, image})
 function Searchbar({ coins = [] }) {
   const [inputVal, setInputVal] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [results, setResults] = useState([]);
   const containerRef = useRef(null);
   const navigate = useNavigate();
 
-  // Update results whenever inputVal changes
+  // Filter results
   useEffect(() => {
     if (inputVal.trim().length === 0) {
       setResults([]);
@@ -29,7 +29,7 @@ function Searchbar({ coins = [] }) {
     setResults(filtered);
   }, [inputVal, coins]);
 
-  // Close dropdown if clicked outside
+  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
@@ -46,22 +46,40 @@ function Searchbar({ coins = [] }) {
     setIsFocused(false);
   };
 
-  // Placeholder animation logic (your original idea, improved)
-  const placeholderClass =
-    isFocused || inputVal.length > 0
-      ? "-top-1/6 left-1/16 text-sm opacity-60"
-      : "top-1/5 left-1/8";
+  const isActive = isFocused || isHovered || inputVal.length > 0;
+
+  // Placeholder letters
+  const placeholderText = "Search something...";
+  const letters = placeholderText.split("");
+
+  // Width classes – smooth transition
+  const widthClass = isActive ? "w-100" : "w-70";
 
   return (
     <div
       ref={containerRef}
-      className="relative w-1/2 m-1 overflow-y-visible z-101"
+      className={`relative ${widthClass} m-1 overflow-y-visible z-101 transition-all duration-300`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
+      {/* Glow layer – rotating shadow with smooth opacity */}
       <div
-        className={`relative flex rounded-full outline-0 outline-cyan-400 bg-cyan-900 hover:outline-2 focus-within:bg-cyan-700 focus-within:outline-2 focus-within:border-cyan-700 ${
-          isFocused ? "bg-cyan-700 outline-2" : ""
-        }`}
+        className={`
+          absolute inset-0 rounded-full pointer-events-none
+          transition-opacity duration-300
+          ${isFocused ? "opacity-100" : "opacity-0"}
+          ${isFocused ? "animate-rotate-shadow" : ""}
+        `}
+      />
+
+      {/* Main input wrapper */}
+      <div
+        className={`
+          relative flex items-center rounded-full
+          bg-cyan-800 transition-all duration-300
+        `}
       >
+        {/* Input field with inset shadow */}
         <input
           type="text"
           value={inputVal}
@@ -70,25 +88,48 @@ function Searchbar({ coins = [] }) {
             if (!isFocused) setIsFocused(true);
           }}
           onFocus={() => setIsFocused(true)}
-          className="my-auto p-0.5 pl-4 w-full h-9 text-[13px] text-white bg-transparent focus:outline-0"
-          placeholder="" // we use custom placeholder below
+          className="
+            mx-2 my-0.5
+            w-full h-9 pl-4 pr-0 py-0
+            text-[13px] text-white
+            bg-cyan-950
+            outline-0
+            transition-all duration-300
+            shadow-[inset_2px_5px_10px_rgba(0,0,0,0.3)]
+            rounded-full
+          "
         />
 
-        {/* Animated placeholder */}
-        <p
-          className={`px-2 absolute text-gray-200 select-none pointer-events-none font-mono transition-all duration-500 bg-cyan-900 rounded-full ${placeholderClass} ${
-            isFocused ? "bg-cyan-700" : ""
-          }`}
+        {/* Animated label with letter‑by‑letter stagger */}
+        <label
+          className={`
+            absolute left-4 top-1/2 -translate-y-1/2
+            pointer-events-none select-none
+            transition-all duration-500
+            ${isActive ? "opacity-70" : "opacity-100"}
+          `}
         >
-          What are you looking for ?
-        </p>
-
-        {/* Search icon button (could be a submit or clear) */}
-        <div className="size-10 bg-cyan-600 rounded-full m-0.5 hover:scale-110 hover:rotate-90 duration-300 cursor-pointer">
-          {HeaderSVGs.Search}
-        </div>
+          {letters.map((char, index) => (
+            <span
+              key={index}
+              style={{ transitionDelay: `${index * 20}ms` }}
+              className={`
+                inline-block min-w-[5px] text-white/80 text-center
+                transition-all duration-300 ease-[cubic-bezier(0.68,-0.55,0.265,1.55)]
+                ${
+                  isActive
+                    ? "text-cyan-300 -translate-y-5 scale-80"
+                    : "translate-y-0 scale-100"
+                }
+              `}
+            >
+              {char === " " ? "\u00A0" : char}
+            </span>
+          ))}
+        </label>
       </div>
-      {/* Dropdown results */}
+
+      {/* Dropdown results – width auto‑follows container */}
       {isFocused && results.length > 0 && (
         <div className="absolute top-full mt-2 w-full bg-cyan-800 border border-cyan-700 rounded-xl shadow-lg max-h-fit scroll-hidden">
           {results.map((coin) => (
@@ -102,7 +143,7 @@ function Searchbar({ coins = [] }) {
                 alt={coin.name}
                 className="w-6 h-6 rounded-full"
                 onError={(e) => {
-                  e.target.src = `/${coin.name}.png`; // your fallback
+                  e.target.src = `/${coin.name}.png`;
                 }}
               />
               <div className="flex flex-col">
@@ -113,7 +154,6 @@ function Searchbar({ coins = [] }) {
                   {coin.symbol}
                 </span>
               </div>
-              {/* Optionally show price or rank */}
               {coin.market_cap_rank && (
                 <span className="ml-auto text-gray-400 text-xs">
                   #{coin.market_cap_rank}
@@ -123,9 +163,10 @@ function Searchbar({ coins = [] }) {
           ))}
         </div>
       )}
-      {/* No results message (optional) */}
+
+      {/* No results */}
       {isFocused && inputVal.trim().length > 0 && results.length === 0 && (
-        <div className="absolute top-full mt-2 w-full bg-cyan-800 border border-cyan-700 rounded-xl shadow-lg z-50 p-4 text-gray-300 text-sm">
+        <div className="absolute top-full mt-2 w-full bg-cyan-800 border border-cyan-700 rounded-xl shadow-lg p-4 text-gray-300 text-sm">
           No results found.
         </div>
       )}

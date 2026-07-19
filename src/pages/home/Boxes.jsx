@@ -29,16 +29,7 @@ function Boxes() {
   }, []);
 
   return (
-    <div
-      className="grid grid-cols-2 grid-rows-2 gap-x-3 gap-y-10 w-full h-auto justify-center text-center p-2"
-      style={{
-        backgroundImage: "url('/coinsList-bg.webp')",
-        backgroundPosition: "center",
-        backgroundSize: "cover",
-        backgroundRepeat: "repeat",
-        height: "100%",
-      }}
-    >
+    <div className="grid grid-cols-2 grid-rows-2 gap-x-3 gap-y-10 w-full h-auto justify-center text-center p-2">
       <div className="flex flex-col bg-[rgba(173,225,251,0.7)] hover:bg-[rgba(173,225,251,0.8)] rounded-3xl duration-300 group">
         <h3 className="font-['Gorehand'] my-10 py-5 mx-20 text-4xl text-cyan-800 rounded-full  border-white shadow-[0_10px_70px_-10px] shadow-white select-none group-hover:bg-red-100 duration-500">
           Trending Coins

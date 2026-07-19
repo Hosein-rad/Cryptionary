@@ -70,7 +70,7 @@ function TopCoinsGrid() {
   }
 
   return (
-    <div className="w-full max-h-screen overflow-y-auto px-4 bg-cyan-600">
+    <div className="w-full max-h-screen overflow-y-auto px-4 ">
       <div className="flex flex-wrap justify-center gap-6 p-10 pb-20">
         {coins.map((coin) => (
           <CometCard key={coin.id}>
@@ -82,10 +82,10 @@ function TopCoinsGrid() {
             >
               {/* Coin Image */}
               <div className="mx-2 flex-1">
-                <div className="relative mt-2 w-full aspect-[4/3]">
+                <div className="relative mt-2 w-50 mx-auto aspect-[4/3]">
                   <img
                     loading="lazy"
-                    className="absolute inset-0 h-full w-full rounded-[16px] bg-[#000000] object-contain"
+                    className="absolute inset-0 h-full w-full rounded-[16px] object-contain"
                     alt={coin.name}
                     src={coin.image}
                     onError={(e) => {

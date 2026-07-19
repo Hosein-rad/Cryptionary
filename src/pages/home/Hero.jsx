@@ -7,14 +7,7 @@ function Header() {
   return (
     <div
       id="#"
-      className="pt-10 pb-25 rounded-t-3xl border-b-10 border-black"
-      style={{
-        backgroundImage: `url("https://ghab24.com/movafaghiat/media/appmedia/image/GHAB%20MEDIA%20DESKTOP%20745-min.jpg")`,
-        backgroundPosition: "center",
-        backgroundSize: "auto",
-        backgroundRepeat: "repeat",
-        height: "100%",
-      }}
+      className="pt-10 pb-25 rounded-t-3xl"
     >
       <p className="text-cyan-500 text-4xl w-3/5 font-light text-center select-none z-10">
         Welcome to

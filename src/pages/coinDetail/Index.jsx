@@ -114,7 +114,7 @@ export default function CoinDetail() {
       {!coinId && (
         <div>
           <p className="my-5 text-center text-lg">
-            Search a coin from the Searchbar above, or click on a card
+            Search a coin from the Searchbar above, or click on a card below.
           </p>
           <TopCoinsGrid />
         </div>

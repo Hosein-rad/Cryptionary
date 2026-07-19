@@ -2,10 +2,11 @@ import DarkMode from "./DarkMode";
 import Searchbar from "./SearchBar";
 import coins from "../../data/CoinGecko2k.json";
 import { NavLink } from "react-router-dom";
+import NavMenu from "./NavMenu";
 
 export default function Header() {
   return (
-    <div className="w-full px-2 py-1 flex justify-between fixed top-0 backdrop-blur-xl z-100">
+    <div className="h-15 w-full px-2 py-1 flex justify-between fixed top-0 backdrop-blur-sm z-100">
       <NavLink
         to={"/"}
         className="h-10 px-2 mt-1 flex items-center justify-center cursor-pointer"
@@ -13,12 +14,13 @@ export default function Header() {
         <img
           src="/logo.webp"
           alt="Cryptionary logo"
-          className="my-auto h-12 w-auto rounded-xl"
+          className="py-1 h-full w-auto rounded-xl"
         />
       </NavLink>
       <Searchbar coins={coins} />
       <div className="flex">
         <DarkMode />
+        <NavMenu />
       </div>
     </div>
   );
