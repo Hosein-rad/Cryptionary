@@ -57,16 +57,16 @@ export default function GradientTitle({ text }) {
   }, []);
 
   return (
-    <div className="relative -mt-20 pt-10 pb-45 w-6/7 px-30 mx-auto h-40 rounded-br-full border-black border-b-6 mask-l-from-85%">
+    <div className="relative -mt-10 pb-55 w-6/7 px-20 mx-auto h-40 rounded-br-full border-black border-b-6 mask-l-from-85%">
       <div
         ref={refA}
-        className="z-10 pt-13 font-medium absolute w-fit text-8xl bg-clip-text text-transparent pointer-events-none font-['Gorehand'] select-none"
+        className="z-10 pt-13 font-medium absolute w-fit text-9xl bg-clip-text text-transparent pointer-events-none font-['Gorehand'] select-none"
       >
         {text}
       </div>
       <div
         ref={refB}
-        className="absolute pt-13 font-medium w-fit text-8xl bg-clip-text text-transparent pointer-events-none font-['Gorehand'] select-none"
+        className="absolute pt-13 font-medium w-fit text-9xl bg-clip-text text-transparent pointer-events-none font-['Gorehand'] select-none"
       >
         {text}
       </div>

@@ -2,7 +2,7 @@ import { useCallback, useState, useRef, useEffect } from "react";
 import Hero from "./Hero";
 import Boxes from "./Boxes";
 import CoinsList from "./CoinsList";
-import ScrollToTop from "../../components/ui/ScrollToTop";
+import ScrollToTop from "../../ui/ScrollToTop";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);

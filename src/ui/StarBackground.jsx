@@ -17,7 +17,7 @@ export function StarBackground({ className = "" }) {
     { count: 70, size: 2, speedBase: 0.5 },
     { count: 50, size: 3, speedBase: 0.8 },
   ];
-  const BG_COLORS = ["#0b111e", "#1b2735"];
+  const BG_COLORS = ["#01032e", "#1b2735"];
 
   // ---- random colour for each star (soft, warm/cool) ----
   const randomStarColor = useCallback(() => {

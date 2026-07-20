@@ -16,7 +16,7 @@ const gradients = [
 
 const menuItems = [
   { path: "/", icon: "home", label: "Home" },
-  { path: "/CoinDetail", icon: "coin-info", label: "Coins" },
+  { path: "/CoinDetail", icon: "coin-info", label: "Coin info" },
   { path: "/Converter", icon: "convert", label: "Converter" },
   { path: "/Watchlist", icon: "watchlist", label: "Watchlist" },
   { path: "/About", icon: "about", label: "About" },

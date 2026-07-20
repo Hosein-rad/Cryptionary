@@ -59,7 +59,7 @@ function TopCoins({ data }) {
   ));
 
   return (
-    <div className="mx-4 my-4 flex flex-wrap justify-center items-center">
+    <div className="mx-4 mt-4 flex flex-wrap justify-center items-center">
       {jsx}
       {isVisible && (
         <div

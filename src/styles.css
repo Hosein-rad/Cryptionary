@@ -65,8 +65,3 @@
 .menu-item:hover .menu-item-glow {
   inset: -7px;
 }
-.menu-item.active {
-  ring: 2px solid white;
-  ring-offset: 2px;
-  ring-offset-color: #1a202c;
-}

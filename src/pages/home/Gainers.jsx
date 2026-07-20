@@ -1,36 +1,29 @@
-import { useEffect, useState, useMemo } from "react";
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import CurrencyItem from "./CurrencyItem.jsx";
 import MetaData from "../../data/MetaDataof2kCoins.json";
 import offlineData from "../../data/CoinPaprika-Top2k.json";
-import { useNavigate } from "react-router-dom";
 
 const formatter = new Intl.NumberFormat("en", {
   notation: "compact",
   maximumFractionDigits: 5,
 });
 
+const fetchTickers = async () => {
+  const res = await fetch("https://api.coinpaprika.com/v1/tickers");
+  if (!res.ok) throw new Error(`Status: ${res.status}`);
+  return res.json();
+};
+
 function Gainers() {
   const [timeframe, setTimeframe] = useState("15m");
-  const [fullData, setFullData] = useState(offlineData);
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    let cancelled = false;
-    async function fetchLive() {
-      try {
-        const res = await fetch("https://api.coinpaprika.com/v1/tickers");
-        if (!res.ok) throw new Error(`Status: ${res.status}`);
-        const data = await res.json();
-        if (!cancelled) setFullData(data);
-      } catch (err) {
-        console.warn("Live gainers fetch failed – using offline data.", err);
-      }
-    }
-    fetchLive();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const { data: fullData = offlineData } = useQuery({
+    queryKey: ["tickers"],
+    queryFn: fetchTickers,
+    initialData: offlineData,
+    staleTime: 60000,
+  });
 
   const gainersArray = useMemo(() => {
     const sorted = [...fullData].sort(

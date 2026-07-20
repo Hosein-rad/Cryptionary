@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CometCard } from "../../components/ui/comet-card";
+import { CometCard } from "../../ui/comet-card";
 import Sparkline from "../Home/Sparkline";
 
 const formatter = new Intl.NumberFormat("en", {
@@ -70,8 +70,8 @@ function TopCoinsGrid() {
   }
 
   return (
-    <div className="w-full max-h-screen overflow-y-auto px-4 ">
-      <div className="flex flex-wrap justify-center gap-6 p-10 pb-20">
+    <div className="w-fit max-h-screen overflow-y-auto p-4 pb-50 backdrop-blur-xs">
+      <div className="flex flex-wrap justify-center gap-6">
         {coins.map((coin) => (
           <CometCard key={coin.id}>
             <button

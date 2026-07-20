@@ -9,9 +9,9 @@ const loadingSVG = (
     <style>{`
     #back2089, #front2089 {
       fill: none;
-      stroke-width: 3;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+      strokeWidth: 3;
+      strokeLinecap: round;
+      strokeLinejoin: round;
     }
 
     #back2089 {
@@ -21,18 +21,18 @@ const loadingSVG = (
 
     #front2089 {
       stroke: currentColor;
-      stroke-dasharray: 260;
-      stroke-dashoffset: 0;
+      strokeDasharray: 260;
+      strokeDashoffset: 0;
       animation: dash_6821 1.4s linear infinite;
     }
 
     @keyframes dash_6821 {
       0% {
-        stroke-dashoffset: 260;
+        strokeDashoffset: 260;
         opacity: 1;
       }
       100% {
-        stroke-dashoffset: 0;
+        strokeDashoffset: 0;
         opacity: .5;
       }
     }
@@ -99,7 +99,7 @@ export default function CoinDetail() {
 
   useEffect(() => {
     if (!error) return;
-    if (coinData || chartData) return; // already succeeded, don't retry
+    if (coinData || chartData) return;
 
     const interval = setInterval(() => {
       const controller = new AbortController();
@@ -110,11 +110,14 @@ export default function CoinDetail() {
   }, [error, coinData, chartData, fetchData]);
 
   return (
-    <div className="relative w-full h-screen flex flex-row  justify-evenly text-white overflow-hidden">
+    <div className="relative w-full h-[calc(100vh-60px)] flex flex-row  justify-evenly text-white overflow-hidden">
       {!coinId && (
         <div>
-          <p className="my-5 text-center text-lg">
-            Search a coin from the Searchbar above, or click on a card below.
+          <p className="mt-8 text-center text-2xl font-extrabold">
+            Looking for a specific coin?
+          </p>
+          <p className="mb-5 text-center text-lg">
+            👆 Use the search bar, or click a card to get started 👇
           </p>
           <TopCoinsGrid />
         </div>
