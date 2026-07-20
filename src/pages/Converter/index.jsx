@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query"; // ADDED
 import CurrencySelect from "./CurrencySelect";
 import { FIATS } from "./fiats";
 import coins from "../../data/CoinGecko2k.json";
+import GradientTitle from "../../ui/GradientTitle";
 
 const POPULAR_IDS = [
   "bitcoin",
@@ -15,7 +17,6 @@ const POPULAR_IDS = [
 ];
 
 export default function Converter() {
-  // Merge fiats + cryptos and sort by popularity
   const allCurrencies = [
     ...FIATS.map((f) => ({ ...f, type: "fiat" })),
     ...coins.map((c) => ({ ...c, type: "crypto" })),
@@ -31,123 +32,131 @@ export default function Converter() {
   const [fromCurrency, setFromCurrency] = useState("bitcoin");
   const [toCurrency, setToCurrency] = useState("usd");
   const [amount, setAmount] = useState(1);
-  const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  // Helper to get full currency object
   const getCurrencyObj = (id) => allCurrencies.find((c) => c.id === id);
   const getType = (id) => getCurrencyObj(id)?.type;
 
-  const handleConvert = async () => {
-    if (!amount || isNaN(amount) || amount <= 0) {
-      setError("Enter a valid amount");
-      return;
-    }
-    setLoading(true);
-    setError("");
+  // ---- React Query conversion ----
+  const {
+    data: result,
+    isLoading,
+    error,
+    refetch,
+    isFetching,
+  } = useQuery({
+    queryKey: ["conversion", fromCurrency, toCurrency, amount],
+    queryFn: async () => {
+      const num = Number(amount);
+      if (!amount || isNaN(num) || num <= 0) {
+        throw new Error("Enter a valid amount");
+      }
 
-    const fromType = getType(fromCurrency);
-    const toType = getType(toCurrency);
-    const fromSymbol = getCurrencyObj(fromCurrency)?.symbol?.toLowerCase();
-    const toSymbol = getCurrencyObj(toCurrency)?.symbol?.toLowerCase();
+      const fromType = getType(fromCurrency);
+      const toType = getType(toCurrency);
+      const fromSymbol = getCurrencyObj(fromCurrency)?.symbol?.toLowerCase();
+      const toSymbol = getCurrencyObj(toCurrency)?.symbol?.toLowerCase();
 
-    try {
-      let url, response, converted;
+      let converted;
 
       if (fromType === "crypto" && toType === "crypto") {
-        // Crypto → Crypto : fetch both prices in USD, then divide
-        url = `https://api.coingecko.com/api/v3/simple/price?ids=${fromCurrency},${toCurrency}&vs_currencies=usd`;
-        response = await fetch(url);
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
-        const data = await response.json();
+        const url = `https://api.coingecko.com/api/v3/simple/price?ids=${fromCurrency},${toCurrency}&vs_currencies=usd`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`API error: ${res.status}`);
+        const data = await res.json();
         const fromPrice = data[fromCurrency]?.usd;
         const toPrice = data[toCurrency]?.usd;
         if (!fromPrice || !toPrice)
           throw new Error("Price not available for one of the coins.");
-        converted = amount * (fromPrice / toPrice);
+        converted = num * (fromPrice / toPrice);
       } else if (fromType === "crypto" && toType === "fiat") {
-        // Crypto → Fiat : use direct pair, vs_currencies = fiat symbol
-        url = `https://api.coingecko.com/api/v3/simple/price?ids=${fromCurrency}&vs_currencies=${toSymbol}`;
-        response = await fetch(url);
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
-        const data = await response.json();
-        converted = amount * data[fromCurrency][toSymbol];
+        const url = `https://api.coingecko.com/api/v3/simple/price?ids=${fromCurrency}&vs_currencies=${toSymbol}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`API error: ${res.status}`);
+        const data = await res.json();
+        converted = num * data[fromCurrency][toSymbol];
       } else if (fromType === "fiat" && toType === "crypto") {
-        // Fiat → Crypto : need crypto price in fiat, then invert
-        url = `https://api.coingecko.com/api/v3/simple/price?ids=${toCurrency}&vs_currencies=${fromSymbol}`;
-        response = await fetch(url);
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
-        const data = await response.json();
-        converted = amount / data[toCurrency][fromSymbol];
+        const url = `https://api.coingecko.com/api/v3/simple/price?ids=${toCurrency}&vs_currencies=${fromSymbol}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`API error: ${res.status}`);
+        const data = await res.json();
+        converted = num / data[toCurrency][fromSymbol];
       } else {
-        // Fiat → Fiat : use bitcoin as bridge
-        url = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=${fromSymbol},${toSymbol}`;
-        response = await fetch(url);
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
-        const data = await response.json();
+        const url = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=${fromSymbol},${toSymbol}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`API error: ${res.status}`);
+        const data = await res.json();
         const btcFrom = data.bitcoin[fromSymbol];
         const btcTo = data.bitcoin[toSymbol];
-        converted = (amount / btcFrom) * btcTo;
+        converted = (num / btcFrom) * btcTo;
       }
 
-      setResult(converted.toFixed(6));
-    } catch (err) {
-      setError(err.message);
-      setResult(null);
-    } finally {
-      setLoading(false);
+      return converted.toFixed(6);
+    },
+    enabled: false,
+    staleTime: 60000,
+    retry: false,
+  });
+
+  const handleConvert = () => {
+    if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
+      refetch();
+      return;
     }
+    refetch();
   };
 
   return (
-    <div className="w-4/5 h-100 mx-auto bg-gray-900 rounded-xl shadow-md p-6 text-white space-y-5">
-      <h2 className="text-2xl font-bold">Converter</h2>
-
-      <div className="flex gap-3 items-end">
-        <input
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          placeholder="Amount"
-          className="w-1/2 p-2 rounded bg-gray-800 border border-gray-700 text-white text-sm"
-          min="0"
-        />
-        <div className="w-1/2">
-          <CurrencySelect
-            value={fromCurrency}
-            onChange={setFromCurrency}
-            currencies={allCurrencies}
+    <div className="w-full h-[calc(100vh-100px)] flex flex-col items-center justify-center">
+      <div className="min-w-1/2 min-h-1/2 m-auto p-10 backdrop-brightness-50 rounded-xl text-white">
+        <GradientTitle text="Converter" className="h-30 text-7xl" />
+        <div className="mt-5 flex gap-5 items-end">
+          <input
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="Amount"
+            className="w-1/2 p-2 rounded bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white text-sm"
+            min="0"
           />
+          <div className="w-1/2">
+            <CurrencySelect
+              value={fromCurrency}
+              onChange={setFromCurrency}
+              currencies={allCurrencies}
+            />
+          </div>
         </div>
-      </div>
 
-      <div className="flex gap-3 items-end">
-        <input
-          type="text"
-          value={result !== null ? result : ""}
-          readOnly
-          placeholder="Result"
-          className="w-1/2 p-2 rounded bg-gray-800 border border-gray-700 text-white text-sm cursor-default"
-        />
-        <div className="w-1/2">
-          <CurrencySelect
-            value={toCurrency}
-            onChange={setToCurrency}
-            currencies={allCurrencies}
+        <div className="mt-5 flex gap-5 items-end">
+          <input
+            type="text"
+            value={result !== undefined && result !== null ? result : ""}
+            readOnly
+            placeholder="Result"
+            className="w-1/2 p-2 rounded outline-0 bg-gray-900 border border-gray-700 text-white text-sm cursor-default"
           />
+          <div className="w-1/2">
+            <CurrencySelect
+              value={toCurrency}
+              onChange={setToCurrency}
+              currencies={allCurrencies}
+            />
+          </div>
         </div>
+
+        <button
+          onClick={handleConvert}
+          disabled={isFetching}
+          className="mt-10 w-full bg-cyan-600 hover:bg-cyan-700 disabled:opacity-50 py-2 rounded font-semibold transition cursor-pointer"
+        >
+          {isFetching ? "Converting..." : "Convert"}
+        </button>
+
+        {error && <p className="text-red-400 text-sm">{error.message}</p>}
       </div>
-
-      <button
-        onClick={handleConvert}
-        disabled={loading}
-        className="w-full bg-cyan-600 hover:bg-cyan-700 disabled:opacity-50 py-2 rounded font-semibold transition"
-      >
-        {loading ? "Converting..." : "Convert"}
-      </button>
-
-      {error && <p className="text-red-400 text-sm">{error}</p>}
+      <p className="text-white text-lg">
+        Crypto ⇄ Crypto · Fiat ⇄ Fiat · Crypto ⇄ Fiat · All in one place
+      </p>
     </div>
   );
 }

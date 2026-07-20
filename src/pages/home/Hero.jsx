@@ -67,8 +67,9 @@ function Hero() {
       <p className="text-cyan-500/50 text-4xl w-3/5 font-light text-center font-['Gorehand'] select-none z-10">
         Welcome to
       </p>
-
-      <GradientTitle text={"Cryptionary"} />
+      <div className="w-9/10 mx-auto rounded-br-full border-black border-b-6 mask-l-from-85%">
+        <GradientTitle text={"Cryptionary"} className="text-9xl my-5" />
+      </div>
 
       <p className="mt-5 text-gray-100 text-2xl text-right w-4/5 pb-30 select-none">
         <TypewriterEffect

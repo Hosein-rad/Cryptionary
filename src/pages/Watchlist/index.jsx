@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useWatchlist from "../../hooks/useWatchlist/useWatchlist";
 import Sparkline from "../Home/Sparkline";
 import MetaData from "../../data/MetaDataof2kCoins.json";
+import GradientTitle from "../../ui/GradientTitle";
 
 const formatter = new Intl.NumberFormat("en", {
   notation: "compact",
@@ -115,7 +116,7 @@ function Watchlist() {
 
   return (
     <div className="w-full flex flex-col items-center">
-      <h1 className="text-white text-5xl my-10 font-extrabold">Your Watchlist</h1>
+      <GradientTitle text="Watchlist" className="text-7xl my-10" />
       <table className="w-full">
         <thead className="sticky top-0">
           <tr className="w-full h-10 text-sm bg-blue-200 cursor-default">

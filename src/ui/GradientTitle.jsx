@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 
-// Randomized Colors and Gradients for the Hero title
 const randomColor = () => {
   const r = Math.floor(Math.random() * 256);
   const g = Math.floor(Math.random() * 256);
@@ -14,11 +13,11 @@ const randomGradient = () => {
   return `linear-gradient(${deg}deg, rgb(${randomColor()}) 0%, rgb(${randomColor()}) 25%, rgb(${randomColor()}) 50%, rgb(${randomColor()}) 75%, rgb(${randomColor()}) 100%)`;
 };
 
-export default function GradientTitle({ text }) {
-  const refA = useRef(null); // one text element
-  const refB = useRef(null); // the other
+export default function GradientTitle({ text, className }) {
+  const refA = useRef(null);
+  const refB = useRef(null);
   const intervalRef = useRef(null);
-  // Track which layer is currently visible (true = A, false = B)
+
   const visibleA = useRef(true);
 
   useEffect(() => {
@@ -26,7 +25,6 @@ export default function GradientTitle({ text }) {
     const elB = refB.current;
     if (!elA || !elB) return;
 
-    // Initial setup
     elA.style.transition = "opacity 3s ease-in-out";
     elB.style.transition = "opacity 3s ease-in-out";
     elA.style.backgroundImage = randomGradient();
@@ -35,7 +33,6 @@ export default function GradientTitle({ text }) {
     elB.style.opacity = 0;
     visibleA.current = true;
 
-    // toggle between the 2 'text' props
     const toggle = () => {
       if (visibleA.current) {
         elB.style.backgroundImage = randomGradient();
@@ -57,16 +54,18 @@ export default function GradientTitle({ text }) {
   }, []);
 
   return (
-    <div className="relative -mt-10 pb-55 w-6/7 px-20 mx-auto h-40 rounded-br-full border-black border-b-6 mask-l-from-85%">
+    <div
+      className={`relative w-fit h-fit mx-auto flex items-center justify-center ${className}`}
+    >
       <div
         ref={refA}
-        className="z-10 pt-13 font-medium absolute w-fit text-9xl bg-clip-text text-transparent pointer-events-none font-['Gorehand'] select-none"
+        className="z-10 w-fit bg-clip-text text-transparent pointer-events-none font-['Gorehand'] select-none"
       >
         {text}
       </div>
       <div
         ref={refB}
-        className="absolute pt-13 font-medium w-fit text-9xl bg-clip-text text-transparent pointer-events-none font-['Gorehand'] select-none"
+        className="absolute w-fit bg-clip-text text-transparent pointer-events-none font-['Gorehand'] select-none"
       >
         {text}
       </div>

@@ -19,7 +19,7 @@ export default function CurrencyItem({
 
   return (
     <div
-      className="py-1 mx-7 grid grid-flow-col grid-cols-[2fr_2fr_5fr_3fr] border-b-1 border-dotted border-gray-600 hover:rounded-full hover:bg-sky-200 hover:scale-105 duration-300 cursor-pointer"
+      className="py-1 mx-7 pr-4 grid grid-flow-col grid-cols-[2fr_2fr_5fr_3fr] border-b-1 border-dotted border-gray-600 hover:rounded-full hover:bg-sky-200 hover:scale-105 duration-300 cursor-pointer"
       onClick={() =>
         navigate(`/coin/${id_ || name?.toLowerCase().replace(/\s+/g, "-")}`)
       }

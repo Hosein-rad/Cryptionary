@@ -5,7 +5,6 @@ export default function CurrencySelect({ value, onChange, currencies }) {
   const [search, setSearch] = useState("");
   const containerRef = useRef(null);
 
-  // Close on outside click
   useEffect(() => {
     const handler = (e) => {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
@@ -27,14 +26,14 @@ export default function CurrencySelect({ value, onChange, currencies }) {
       )
     : currencies;
 
-  const results = filtered.slice(0, 5); // show first 5
+  const results = filtered.slice(0, 5); 
 
   return (
     <div ref={containerRef} className="relative">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white text-sm"
+        className="w-full flex items-center justify-between px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white text-sm cursor-pointer"
       >
         <span className="flex items-center gap-2">
           {selected?.type === "crypto" && selected?.image && (

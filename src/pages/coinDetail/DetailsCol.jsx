@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useWatchlist from "../../hooks/useWatchlist/useWatchlist";
+import GradientTitle from "../../ui/GradientTitle";
 
 const DetailsCol = ({ coinData }) => {
   const { toggleCoin, isWatched } = useWatchlist();
@@ -41,17 +42,20 @@ const DetailsCol = ({ coinData }) => {
           src={coinData.image.large}
           width={50}
           height={50}
-          className="self-start size-13 rounded-full"
+          className="self-start size-20 rounded-full"
         />
-        <p className="wrap-anywhere">
-          <span className="p-2 text-3xl">{coinData.name}</span>
-          <span className="text-gray-300 text-nowrap uppercase">
-            {coinData.symbol}
-          </span>
-          <span className="py-0.5 px-1.5 mx-2 text-nowrap text-gray-300 bg-gray-700 rounded-md">
-            #{coinData.market_cap_rank}
-          </span>
-        </p>
+        <div className="ml-5">
+          {/* <span className="p-2 text-3xl">{coinData.name}</span> */}
+          <GradientTitle text={coinData.name} className="block text-4xl" />
+          <div className="flex items-end justify-start">
+            <p className="text-gray-300 text-nowrap uppercase">
+              {coinData.symbol}
+            </p>
+            <p className="py-0.5 px-1.5 mx-2 text-nowrap text-gray-300 bg-gray-700 rounded-md">
+              #{coinData.market_cap_rank}
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* price and price change % */}
