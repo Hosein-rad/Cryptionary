@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { HeaderSVGs } from "./HeaderSVGs";
 import { useNavigate } from "react-router-dom";
+import allNames from "../../data/coinGecko-allNames.json";
 
 function Searchbar({ coins = [] }) {
   const [inputVal, setInputVal] = useState("");
@@ -10,24 +11,49 @@ function Searchbar({ coins = [] }) {
   const [isHovered, setIsHovered] = useState(false);
   const [results, setResults] = useState([]);
   const containerRef = useRef(null);
+  const inputRef = useRef(null); // reference for the input (used by magnifying glass button)
   const navigate = useNavigate();
 
-  // Filter results
+  // 🟢 NEW: Populate default suggestions on focus with empty input
   useEffect(() => {
+    if (isFocused && inputVal.trim().length === 0) {
+      // Show first 5 coins from the live market data as quick picks
+      setResults(coins.slice(0, 5));
+    } else {
+      // Normal filtering logic
+      filterResults();
+    }
+  }, [isFocused, inputVal, coins]);
+
+  // Filter results: first from live coins, then fallback to allNames
+  const filterResults = () => {
     if (inputVal.trim().length === 0) {
       setResults([]);
       return;
     }
     const query = inputVal.toLowerCase();
-    const filtered = coins
+    const filteredCoins = coins
       .filter(
         (coin) =>
           coin.name.toLowerCase().includes(query) ||
           coin.symbol.toLowerCase().includes(query)
       )
       .slice(0, 10);
-    setResults(filtered);
-  }, [inputVal, coins]);
+
+    if (filteredCoins.length > 0) {
+      setResults(filteredCoins);
+    } else {
+      // Fallback to the global coin list (allNames)
+      const filteredAll = allNames
+        .filter(
+          (c) =>
+            c.name.toLowerCase().includes(query) ||
+            c.symbol.toLowerCase().includes(query)
+        )
+        .slice(0, 10);
+      setResults(filteredAll);
+    }
+  };
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -47,10 +73,6 @@ function Searchbar({ coins = [] }) {
   };
 
   const isActive = isFocused || isHovered || inputVal.length > 0;
-
-  // Placeholder letters
-  const placeholderText = "Search something...";
-  const letters = placeholderText.split("");
 
   // Width classes – smooth transition
   const widthClass = isActive ? "w-100" : "w-70";
@@ -81,6 +103,7 @@ function Searchbar({ coins = [] }) {
       >
         {/* Input field with inset shadow */}
         <input
+          ref={inputRef} // 🟢 NEW: attach ref for focusing via button
           type="text"
           value={inputVal}
           onChange={(e) => {
@@ -90,7 +113,7 @@ function Searchbar({ coins = [] }) {
           onFocus={() => setIsFocused(true)}
           className="
             mx-2 my-0.5
-            w-full h-9 pl-4 pr-0 py-0
+            w-full h-9 pl-4 pr-12 py-0     /* 🟢 increased right padding to make room for the button */
             text-[13px] text-white
             bg-cyan-950
             outline-0
@@ -109,7 +132,7 @@ function Searchbar({ coins = [] }) {
             ${isActive ? "opacity-70" : "opacity-100"}
           `}
         >
-          {letters.map((char, index) => (
+          {"Search something...".split("").map((char, index) => (
             <span
               key={index}
               style={{ transitionDelay: `${index * 20}ms` }}
@@ -138,12 +161,14 @@ function Searchbar({ coins = [] }) {
               onClick={() => handleSelect(coin)}
               className="flex items-center gap-3 px-4 py-2 hover:bg-cyan-700 cursor-pointer transition-colors"
             >
+              {/* 🟢 Handle missing image gracefully (fallback to a generic icon) */}
               <img
-                src={coin.image}
+                src={coin.image || coin.thumb || "/cryptionary-icon.png"}
                 alt={coin.name}
                 className="w-6 h-6 rounded-full"
                 onError={(e) => {
-                  e.target.src = `/${coin.name}.png`;
+                  e.target.onerror = null;
+                  e.target.src = "/cryptionary-icon.png";
                 }}
               />
               <div className="flex flex-col">

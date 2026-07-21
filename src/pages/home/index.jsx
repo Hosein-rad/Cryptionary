@@ -63,9 +63,9 @@ function Home() {
               <style>{`
     #back2089, #front2089 {
       fill: none;
-      stroke-width: 3;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+      strokeWidth: 3;
+      strokeLinecap: round;
+      strokeLinejoin: round;
     }
 
     #back2089 {
@@ -75,18 +75,18 @@ function Home() {
 
     #front2089 {
       stroke: currentColor;
-      stroke-dasharray: 260;
-      stroke-dashoffset: 0;
+      strokeDasharray: 260;
+      strokeDashoffset: 0;
       animation: dash_6821 1.4s linear infinite;
     }
 
     @keyframes dash_6821 {
       0% {
-        stroke-dashoffset: 260;
+        strokeDashoffset: 260;
         opacity: 1;
       }
       100% {
-        stroke-dashoffset: 0;
+        strokeDashoffset: 0;
         opacity: .5;
       }
     }

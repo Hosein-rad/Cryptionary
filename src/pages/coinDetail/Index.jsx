@@ -1,59 +1,34 @@
-import { useParams } from "react-router-dom";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ChartCol from "./ChartCol";
 import DetailsCol from "./detailsCol";
 import TopCoinsGrid from "./TopCoinsGrid ";
+import { SVGs } from "./SVGs";
+import allNames from "../../data/coinGecko-allNames.json"; // 🟢 import the full coin list
 
-const loadingSVG = (
-  <svg viewBox="0 0 128 64">
-    <style>{`
-    #back2089, #front2089 {
-      fill: none;
-      strokeWidth: 3;
-      strokeLinecap: round;
-      strokeLinejoin: round;
-    }
-
-    #back2089 {
-      stroke: currentColor;
-      opacity: 0.1;
-    }
-
-    #front2089 {
-      stroke: currentColor;
-      strokeDasharray: 260;
-      strokeDashoffset: 0;
-      animation: dash_6821 1.4s linear infinite;
-    }
-
-    @keyframes dash_6821 {
-      0% {
-        strokeDashoffset: 260;
-        opacity: 1;
-      }
-      100% {
-        strokeDashoffset: 0;
-        opacity: .5;
-      }
-    }
-  `}</style>
-
-    <polyline
-      id="back2089"
-      points="0,45.486 38.514,45.486 44.595,33.324 50.676,45.486 57.771,45.486 62.838,55.622 71.959,9 80.067,63.729 84.122,45.486 97.297,45.486 103.379,40.419 110.473,45.486 150,45.486"
-    />
-    <polyline
-      id="front2089"
-      points="0,45.486 38.514,45.486 44.595,33.324 50.676,45.486 57.771,45.486 62.838,55.622 71.959,9 80.067,63.729 84.122,45.486 97.297,45.486 103.379,40.419 110.473,45.486 150,45.486"
-    />
-  </svg>
-);
+// ------------------------------------------------------------
+//  HELPER: find the best matching coin ID (original → -2 → -3 → … → -5)
+// ------------------------------------------------------------
+function findBestCoinId(baseId, list) {
+  if (!baseId) return null;
+  // check the exact id first
+  if (list.find((c) => c.id === baseId)) return baseId;
+  // try suffixes -2 to -5
+  for (let i = 2; i <= 5; i++) {
+    const candidate = `${baseId}-${i}`;
+    if (list.find((c) => c.id === candidate)) return candidate;
+  }
+  return null; // set something to handle the null later
+}
 
 export default function CoinDetail() {
-  const { coinId } = useParams();
+  const navigate = useNavigate();
+  const { coinId: baseCoinId } = useParams();
   const [coinData, setCoinData] = useState(null);
   const [chartData, setChartData] = useState(null);
   const [error, setError] = useState(null);
+  const loadedIdRef = useRef(null);
+
   const formatter = new Intl.NumberFormat("en", {
     notation: "compact",
     maximumFractionDigits: 2,
@@ -63,55 +38,100 @@ export default function CoinDetail() {
     maximumFractionDigits: 5,
   });
 
+  // ------------------------------------------------------------
+  //  FIND THE CORRECT COIN ID (using the offline list)
+  // ------------------------------------------------------------
+  const effectiveCoinId = useMemo(
+    () => findBestCoinId(baseCoinId, allNames),
+    [baseCoinId]
+  );
+
+  // ------------------------------------------------------------
+  //  IF A DIFFERENT (BETTER) ID WAS FOUND, UPDATE THE URL SILENTLY
+  // ------------------------------------------------------------
+  useEffect(() => {
+    if (effectiveCoinId && effectiveCoinId !== baseCoinId) {
+      navigate(`/coin/${effectiveCoinId}`, { replace: true });
+    }
+  }, [effectiveCoinId, baseCoinId, navigate]);
+
+  // ------------------------------------------------------------
+  //  RESET WHEN THE URL (baseCoinId) CHANGES
+  // ------------------------------------------------------------
+  useEffect(() => {
+    setCoinData(null);
+    setChartData(null);
+    setError(null);
+    loadedIdRef.current = null;
+  }, [baseCoinId]);
+
+  // ------------------------------------------------------------
+  //  FETCH DATA (only if a valid ID exists)
+  // ------------------------------------------------------------
   const fetchData = useCallback(
     async (signal) => {
+      if (!effectiveCoinId) {
+        setError("Coin not found – please check the name or try another one.");
+        return;
+      }
+
       setCoinData(null);
       setChartData(null);
       setError(null);
 
       try {
         const coinRes = await fetch(
-          `https://api.coingecko.com/api/v3/coins/${coinId}`,
+          `https://api.coingecko.com/api/v3/coins/${effectiveCoinId}`,
           { signal }
         );
-        if (!coinRes.ok) throw new Error(`Status: ${coinRes.status}`);
-        setCoinData(await coinRes.json());
+        if (!coinRes.ok) {
+          throw new Error(`Coin data error: ${coinRes.status}`);
+        }
+        const coinJson = await coinRes.json();
+        setCoinData(coinJson);
 
         const chartRes = await fetch(
-          `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=1`,
+          `https://api.coingecko.com/api/v3/coins/${effectiveCoinId}/market_chart?vs_currency=usd&days=1`,
           { signal }
         );
-        if (!chartRes.ok) throw new Error(`Status: ${chartRes.status}`);
+        if (!chartRes.ok) {
+          throw new Error(`Chart data error: ${chartRes.status}`);
+        }
         setChartData(await chartRes.json());
+
+        loadedIdRef.current = effectiveCoinId;
+        setError(null);
       } catch (err) {
-        if (err.name !== "AbortError") setError(err.message);
+        if (err.name !== "AbortError") {
+          setError(err.message);
+        }
       }
     },
-    [coinId]
+    [effectiveCoinId]
   );
 
+  // ------------------------------------------------------------
+  //  TRIGGER FETCH WHEN effectiveCoinId CHANGES
+  // ------------------------------------------------------------
   useEffect(() => {
-    if (!coinId) return;
+    if (!effectiveCoinId) return;
+    if (effectiveCoinId === loadedIdRef.current) return;
+
     const controller = new AbortController();
     fetchData(controller.signal);
     return () => controller.abort();
-  }, [coinId, fetchData]);
+  }, [effectiveCoinId, fetchData]);
 
-  useEffect(() => {
-    if (!error) return;
-    if (coinData || chartData) return;
+  // ------------------------------------------------------------
+  //  NO MORE SUFFIX-RETRY LOGIC – WE ALREADY HAVE THE RIGHT ID
+  // ------------------------------------------------------------
 
-    const interval = setInterval(() => {
-      const controller = new AbortController();
-      fetchData(controller.signal);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [error, coinData, chartData, fetchData]);
-
+  // ------------------------------------------------------------
+  //  RENDER
+  // ------------------------------------------------------------
   return (
-    <div className="relative w-full h-[calc(100vh-60px)] flex flex-row  justify-evenly text-white overflow-hidden">
-      {!coinId && (
+    <div className="relative w-full h-[calc(100vh-60px)] flex flex-row justify-evenly text-white overflow-hidden">
+      {!baseCoinId && (
         <div>
           <p className="mt-8 text-center text-2xl font-extrabold">
             Looking for a specific coin?
@@ -122,38 +142,48 @@ export default function CoinDetail() {
           <TopCoinsGrid />
         </div>
       )}
-      {coinId && !coinData && (
-        <div>
-          Loading…
-          {loadingSVG}
+
+      {baseCoinId && !effectiveCoinId && !coinData && (
+        <div className="flex items-center justify-center h-full">
+          <p className="text-xl text-red-400">
+            Coin not found – please check the name or try another one.
+          </p>
         </div>
       )}
 
-      {/* -------------------- COIN DETAILS COLUMN -------------------- */}
-      {coinId && coinData && <DetailsCol coinData={coinData} />}
+      {baseCoinId && effectiveCoinId && !coinData && (
+        <div>
+          Loading…
+          {SVGs.loading}
+        </div>
+      )}
 
-      {/* -------------------- COIN CHART COLUMN -------------------- */}
-      {coinId && chartData && (
+      {baseCoinId && coinData && <DetailsCol coinData={coinData} />}
+
+      {baseCoinId && chartData && (
         <div className="w-2/3 h-full px-5 pb-15 flex flex-col overflow-y-scroll">
           <ChartCol chartData={chartData} />
         </div>
       )}
 
-      {/* -------------------- ERROR -------------------- */}
+      {/* Error overlay (if needed) */}
       {error && (
         <div className="absolute h-dvh w-dvw inset-0 flex flex-col items-center justify-center backdrop-blur-3xl text-black rounded-2xl text-xl font-extrabold">
           <p className="text-4xl">{error}</p>
           <p className="text-center mt-10 text-white">
             We are using free api plans from CoinGecko and CoinPaprika. <br />
-            Wait a few secons before trying again...
+            Wait a few seconds before trying again...
           </p>
           <button
             className="px-4 py-2 my-5 bg-purple-300 text-black rounded-2xl cursor-pointer"
-            onClick={fetchData}
+            onClick={() => {
+              const controller = new AbortController();
+              fetchData(controller.signal);
+            }}
           >
             Retry
           </button>
-          <div className="size-50 text-purple-800">{loadingSVG}</div>
+          <div className="size-50 text-purple-800">{SVGs.loading}</div>
         </div>
       )}
     </div>

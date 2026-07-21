@@ -71,12 +71,12 @@ function Hero() {
         <GradientTitle text={"Cryptionary"} className="text-9xl my-5" />
       </div>
 
-      <p className="mt-5 text-gray-100 text-2xl text-right w-4/5 pb-30 select-none">
+      <div className="mt-5 text-gray-100 text-2xl text-right w-4/5 pb-30 select-none">
         <TypewriterEffect
           words={phrases[phraseIndex]}
           onCycleComplete={handleCycleComplete}
         />
-      </p>
+      </div>
     </div>
   );
 }

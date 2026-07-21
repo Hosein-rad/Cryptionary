@@ -27,7 +27,7 @@ function Watchlist() {
 
   const {
     data: coins = [],
-    isLoading,
+    isPending,
     error,
     refetch,
   } = useQuery({
@@ -35,7 +35,6 @@ function Watchlist() {
     queryFn: () => fetchWatchlistCoins(watchlist),
     enabled: watchlist.length > 0,
     staleTime: 60000,
-    placeholderData: [],
   });
 
   const handleToggle = (coinId) => {
@@ -47,7 +46,34 @@ function Watchlist() {
     }
   };
 
-  if (isLoading) {
+  if (error) {
+    return (
+      <div className="w-full mt-20 flex flex-col justify-center items-center h-64 text-red-400">
+        Error loading watchlist: {error.message}
+        <p className="text-center mt-5 text-white text-2xl">
+          We are using free api plans from CoinGecko and CoinPaprika. <br />
+          Wait a few seconds before trying again...
+        </p>
+        <button
+          className="px-4 py-2 my-5 bg-purple-300 text-black rounded-2xl cursor-pointer"
+          onClick={() => refetch()}
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  if (!watchlist.length) {
+    return (
+      <div className="w-full h-[calc(100vh-200px)] flex flex-col items-center justify-center text-white text-xl">
+        <p className="text-5xl font-extrabold">Your watchlist is empty.</p>
+        <p className="mt-5 text-2xl">Star some coins to see them here!</p>
+      </div>
+    );
+  }
+
+  if (isPending) {
     return (
       <div className="mt-20 w-full flex flex-col justify-center items-center h-64 text-white text-center text-2xl">
         Loading watchlist...
@@ -83,33 +109,6 @@ function Watchlist() {
             points="0,45.486 38.514,45.486 44.595,33.324 50.676,45.486 57.771,45.486 62.838,55.622 71.959,9 80.067,63.729 84.122,45.486 97.297,45.486 103.379,40.419 110.473,45.486 150,45.486"
           />
         </svg>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="w-full flex flex-col justify-center items-center h-64 text-red-400">
-        Failed to load watchlist: {error.message}
-        <p className="text-center mt-10 text-white">
-          We are using free api plans from CoinGecko and CoinPaprika. <br />
-          Wait a few seconds before trying again...
-        </p>
-        <button
-          className="px-4 py-2 my-5 bg-purple-300 text-black rounded-2xl cursor-pointer"
-          onClick={() => refetch()}
-        >
-          Retry
-        </button>
-      </div>
-    );
-  }
-
-  if (!watchlist.length) {
-    return (
-      <div className="w-full h-[calc(100vh-200px)] flex flex-col items-center justify-center text-white text-xl">
-        <p className="text-5xl font-extrabold">Your watchlist is empty.</p>
-        <p className="mt-5 text-2xl">Star some coins to see them here!</p>
       </div>
     );
   }

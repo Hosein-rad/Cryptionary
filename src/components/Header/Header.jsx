@@ -14,12 +14,12 @@ export default function Header() {
         <img
           src="/logo.webp"
           alt="Cryptionary logo"
-          className="py-1 h-full w-auto rounded-xl"
+          className="py-1 h-full w-auto rounded-xl hover:scale-150 hover:translate-x-5 hover:translate-y-2 duration-300 outline-0"
         />
       </NavLink>
       <Searchbar coins={coins} />
       <div className="flex">
-        <DarkMode />
+        {/* <DarkMode /> */}
         <NavMenu />
       </div>
     </div>

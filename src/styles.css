@@ -65,3 +65,35 @@
 .menu-item:hover .menu-item-glow {
   inset: -7px;
 }
+
+/* tooltip styles */
+.tooltip-container {
+  position: relative;
+  cursor: pointer;
+  font-size: 17px;
+  padding: 0.7em 1.8em;
+}
+.tooltip {
+  background-color: #3700ff80;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10%); /* Adjusted the initial position */
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  color: #fff;
+  border-radius: 50px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  font-size: 14px;
+  width: fit-content; /* Adjusted the width */
+  padding: 5px 10px; /* Adjusted padding */
+  white-space: nowrap; /* Prevent text wrapping */
+}
+.tooltip-container:hover .tooltip {
+  top: -50%; /* Adjusted the tooltip position */
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}

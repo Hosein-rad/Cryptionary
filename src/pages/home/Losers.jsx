@@ -65,15 +65,17 @@ function Losers() {
       {losersArray.map((item, index) => (
         <CurrencyItem
           key={item.id || `${item.symbol}-${index}`}
-          id_={MetaData[item.symbol]?.id}
-          url={MetaData[item.symbol]?.url}
+          url={MetaData[item?.symbol]?.url}
+          id_={MetaData[item?.symbol]?.id}
           rank={item.rank}
           symbol={item.symbol}
-          name={item.name}
+          name={
+            item.name.length > 12 ? item.name.slice(0, 12) + "…" : item.name
+          }
           price={formatter.format(item.quotes.USD.price)}
-          changePercent={item.quotes.USD[
-            `percent_change_${timeframe}`
-          ]?.toFixed(2)}
+          changePercent={item.quotes.USD[`percent_change_${timeframe}`].toFixed(
+            2
+          )}
         />
       ))}
     </>
