@@ -1,7 +1,5 @@
 import { Chart as ChartComponent } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
-import { legend } from "motion/react-client";
-import { color } from "chart.js/helpers";
 
 const formatter = new Intl.NumberFormat("en", {
   notation: "compact",

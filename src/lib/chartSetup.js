@@ -5,15 +5,12 @@ import {
   TimeScale,
   PointElement,
   LineElement,
+  LineController,
   BarElement,
+  BarController,
   Tooltip,
   Legend,
-  Filler,
 } from "chart.js";
-import {
-  CandlestickController,
-  CandlestickElement,
-} from "chartjs-chart-financial";
 
 Chart.register(
   CategoryScale,
@@ -21,10 +18,9 @@ Chart.register(
   TimeScale,
   PointElement,
   LineElement,
+  LineController,
   BarElement,
-  CandlestickController,
-  CandlestickElement,
+  BarController,
   Tooltip,
-  Legend,
-  Filler
+  Legend
 );
