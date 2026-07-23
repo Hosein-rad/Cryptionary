@@ -74,13 +74,12 @@ function Searchbar({ coins = [] }) {
 
   const isActive = isFocused || isHovered || inputVal.length > 0;
 
-  // Width classes – smooth transition
-  const widthClass = isActive ? "w-100" : "w-70";
-
   return (
     <div
       ref={containerRef}
-      className={`relative ${widthClass} m-1 overflow-y-visible z-101 transition-all duration-300`}
+      className={`relative ${
+        isActive ? "w-50 sm:w-100 xl:w-130" : "w-40 sm:w-70 xl:w-100"
+      } overflow-y-visible z-101 transition-all duration-300`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -137,7 +136,7 @@ function Searchbar({ coins = [] }) {
               key={index}
               style={{ transitionDelay: `${index * 20}ms` }}
               className={`
-                inline-block min-w-[5px] text-white/80 text-center
+                inline-block min-w-[5px] text-white/80 text-center text-xs sm:text-lg
                 transition-all duration-300 ease-[cubic-bezier(0.68,-0.55,0.265,1.55)]
                 ${
                   isActive

@@ -35,7 +35,7 @@ const DetailsCol = ({ coinData }) => {
   const barToHigh = getBarToHigh();
 
   return (
-    <div className="w-1/3 h-full px-5 pb-25 mt-10 flex flex-col items-center justify-start border-r-2 overflow-y-scroll">
+    <div className="sm:w-1/3 h-full px-5 pb-5 sm:pb-25 mt-10 flex flex-col items-center justify-start border-r-2 overflow-y-scroll text-base sm:text-xs xl:text-base">
       {/* icon - name - symbol - rank */}
       <div className="w-full h-fit mb-2 flex flex-row items-end justify-start">
         <img
@@ -45,8 +45,10 @@ const DetailsCol = ({ coinData }) => {
           className="self-center w-1/4 h-auto rounded-full"
         />
         <div className="ml-5">
-          {/* <span className="p-2 text-3xl">{coinData.name}</span> */}
-          <GradientTitle text={coinData.name} className="block text-4xl" />
+          <GradientTitle
+            text={coinData.name}
+            className="block text-4xl sm:text-2xl xl:text-4xl"
+          />
           <div className="flex items-end justify-start">
             <p className="text-gray-300 text-nowrap uppercase">
               {coinData.symbol}
@@ -61,14 +63,14 @@ const DetailsCol = ({ coinData }) => {
       </div>
 
       {/* price and price change % */}
-      <div className="mt-8 w-full flex flex-row items-end justify-between">
-        <p className="text-5xl">
+      <div className="mt-4 sm:mt-1 lg:mt-8 w-full flex flex-row items-end justify-between">
+        <p className="text-4xl sm:text-2xl xl:text-5xl">
           ${formatter2.format(coinData.market_data.current_price.usd)}
         </p>
-        <div className="my-1 flex flex-row items-end justify-start text-2xl">
+        <div className="my-1 flex flex-row items-end justify-start text-lg sm:text-sm xl:text-2xl">
           {Number(coinData.market_data.price_change_percentage_24h) < 0 ? (
-            <p className="text-red-400">
-              ⇣
+            <p className="text-red-400 flex flex-row items-end">
+              ⇣{" "}
               {Math.abs(
                 coinData.market_data.price_change_percentage_24h
               ).toFixed(2)}
@@ -76,7 +78,7 @@ const DetailsCol = ({ coinData }) => {
             </p>
           ) : (
             <p className="text-green-300">
-              ⇡
+              ⇡{" "}
               {Math.abs(
                 coinData.market_data.price_change_percentage_24h
               ).toFixed(2)}
@@ -87,7 +89,7 @@ const DetailsCol = ({ coinData }) => {
       </div>
 
       {/* 24h Range */}
-      <div className="relative mt-2 mb-10 w-full h-2 bg-gradient-to-r from-red-500 to-green-500 rounded-full text-sm">
+      <div className="relative mt-2 mb-10 w-full h-2 bg-gradient-to-r from-red-500 to-green-500 rounded-full text-sm sm:text-xs xl:text-sm">
         <div
           className="absolute top-0 right-0 h-2 rounded-full bg-gray-800 mask-l-from-80%"
           style={{ width: `${barToHigh}%` }}
@@ -102,7 +104,7 @@ const DetailsCol = ({ coinData }) => {
       {/* Watchlist button */}
       <div className="flex w-full">
         <button
-          className={`p-2 mx-2 mb-5 w-full flex justify-between rounded-lg text-left cursor-pointer tooltip-container hover:scale-102 active:translate-y-1 active:scale-98 duration-300 ${
+          className={`relative tooltip-container p-2 mx-2 mb-5 w-full flex justify-between rounded-lg cursor-pointer  hover:scale-102 active:translate-y-1 active:scale-98 duration-300 ${
             isWatched(coinData.id) ? "bg-gray-600" : "bg-green-600"
           }`}
           onClick={(e) => {
@@ -119,14 +121,12 @@ const DetailsCol = ({ coinData }) => {
               Click to <i className="text-green-300">ADD</i>
             </span>
           )}
-          <span className="text-sm my-auto">
+          <span className="text-sm sm:text-[10px] xl:text-sm my-auto">
             {isWatched(coinData.id) ? "★ Watchlist" : "☆ Watchlist"}
           </span>
-          <span className="text-sm my-auto">
-            <span className="my-auto animate-pulse text-xs text-blue-300">
-              ⏺
-            </span>
-            <span className="text-sm my-auto">
+          <span className="text-sm sm:text-[10px] xl:text-sm my-auto">
+            <span className="my-auto animate-pulse text-blue-300">⏺</span>
+            <span className="my-auto">
               {formatter.format(coinData.watchlist_portfolio_users)}
               {SVGs.user}
               Added
@@ -180,7 +180,7 @@ const DetailsCol = ({ coinData }) => {
             href={coinData.links.homepage[0]}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-cyan-400 underline"
+            className="text-cyan-400 underline max-w-60 sm:max-w-40 xl:max-w-60 truncate"
           >
             {coinData.links.homepage[0]}
           </a>
@@ -188,7 +188,7 @@ const DetailsCol = ({ coinData }) => {
         {/* Explorers (Blockchain explorers) */}
         <div className="w-full flex justify-between border-b border-white/50 py-1">
           <p className="text-gray-300">Explorers</p>
-          <div className="flex items-end gap-2">
+          <div className="ml-2 flex flex-col text-right max-w-50 sm:max-w-35 xl:max-w-50 truncate">
             {coinData.links.blockchain_site.slice(0, 3).map((url, i) => (
               <a
                 key={i}
@@ -205,7 +205,7 @@ const DetailsCol = ({ coinData }) => {
         {/* Community (social links) */}
         <div className="w-full flex justify-between border-b border-white/50 py-1">
           <p className="text-gray-300">Community</p>
-          <div className="flex items-end gap-2">
+          <div className="flex flex-col items-end">
             {coinData.links.twitter_screen_name && (
               <a
                 href={`https://twitter.com/${coinData.links.twitter_screen_name}`}
@@ -294,7 +294,7 @@ const DetailsCol = ({ coinData }) => {
             {visibleCategories.map((cat) => (
               <span
                 key={cat}
-                className="bg-cyan-900 text-cyan-200 px-2 py-0.5 rounded-full text-xs"
+                className="bg-cyan-900 text-cyan-200 px-2 py-0.5 rounded-full text-xs max-w-50 sm:max-w-35 xl:max-w-50 truncate"
               >
                 {cat}
               </span>
@@ -398,7 +398,7 @@ const DetailsCol = ({ coinData }) => {
         {/* Community Sentiment (votes) */}
         <div className="w-full flex justify-between border-b border-white/50 py-1">
           <p className="text-gray-300">Community Sentiment</p>
-          <div className="flex gap-3 text-sm">
+          <div className="flex gap-3 text-sm text-center">
             <span className="text-green-400">
               👍 {coinData.sentiment_votes_up_percentage}%
             </span>

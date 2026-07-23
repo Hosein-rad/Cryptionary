@@ -58,29 +58,40 @@ function CoinsList({ onLoaded }) {
         <table className="w-full">
           <thead className="sticky top-0 z-20">
             <tr className="w-full h-10 text-md bg-blue-200 cursor-default">
-              <th className="w-[4%]"></th>
-              <th className="w-[5%]">Rank</th>
-              <th className="w-[12%]">Coin</th>
-              <th className="w-[10%]">Price$</th>
-              <th className="w-[7%]">1H%</th>
-              <th className="w-[7%]">24H%</th>
-              <th className="w-[7%]">7D%</th>
-              <th className="w-[13%]">Volume24H</th>
-              <th className="w-[12%]">MarketCap</th>
-              <th className="w-[15%]">1Y overview</th>
+              <th className=""></th>
+              <th className="p-1 text-sm md:text-lg">Rank</th>
+              <th className="md:w-60 p-1 text-sm md:text-lg">Coin</th>
+              <th className="p-1 text-sm md:text-lg">Price$</th>
+              {/* 🔽 Hide on mobile, show as table-cell on sm+ */}
+              <th className="hidden sm:table-cell p-1 text-sm md:text-lg">
+                1H%
+              </th>
+              <th className="hidden sm:table-cell p-1 text-sm md:text-lg">
+                24H%
+              </th>
+              <th className="hidden sm:table-cell p-1 text-sm md:text-lg">
+                7D%
+              </th>
+              <th className="hidden sm:table-cell p-1 text-sm md:text-lg">
+                Volume24H
+              </th>
+              <th className="p-1 text-sm md:text-lg">
+                Market
+                <br className="block sm:hidden" />
+                Cap
+              </th>
+              <th className="p-1 text-sm md:text-lg">
+                1Y <br className="block sm:hidden" />
+                overview
+              </th>
             </tr>
           </thead>
           <tbody className="bg-black/50">
             {fullData.map((item) => {
-              const shortName =
-                item.name.length > 14
-                  ? item.name.slice(0, 14) + "…"
-                  : item.name;
-
               return (
                 <tr
                   key={item.id}
-                  className="text-sm text-white hover:bg-[rgba(0,200,255,0.5)] duration-300 cursor-pointer"
+                  className="h-10 text-sm text-white hover:bg-[rgba(0,200,255,0.5)] duration-300 cursor-pointer"
                   onClick={() => navigate(`/coin/${item.id}`)}
                 >
                   <td
@@ -88,7 +99,7 @@ function CoinsList({ onLoaded }) {
                       e.stopPropagation();
                       toggleCoin(item.id);
                     }}
-                    className="text-center text-amber-300 cursor-copy hover:scale-120"
+                    className="w-6 sm:w-10 text-center text-amber-300 cursor-copy hover:scale-120"
                   >
                     {isWatched(item.id) ? "★" : "☆"}
                   </td>
@@ -97,32 +108,35 @@ function CoinsList({ onLoaded }) {
                     {item.market_cap_rank}
                   </td>
 
-                  <td className="h-full ml-1">
+                  <td className="h-10 my-auto sm:pl-5 flex flex-row items-center">
                     <img
                       src={item.image || "/cryptionary-icon.png"}
                       loading="lazy"
                       alt={item.symbol}
-                      className="mr-2 rounded-full size-6 inline"
+                      className="rounded-full size-5 sm:size-8 inline"
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = "/cryptionary-icon.png";
                       }}
                     />
-                    <span className="font-bold inline">{shortName}</span>
+                    <span className="pl-1 md:pl-5 inline-block max-w-[80px] sm:max-w-[150px] text-sm sm:text-xl truncate font-bold">
+                      {item.name}
+                    </span>
                   </td>
 
-                  <td className="text-center font-bold">
+                  <td className="text-center font-bold w-20 sm:w-30">
                     ${formatter.format(item.current_price)}
                   </td>
 
-                  <td className="text-center">
+                  {/* 🔽 Hide these cells on mobile, show on sm+ */}
+                  <td className="hidden sm:table-cell text-center w-20">
                     {item.price_change_percentage_1h_in_currency != null
                       ? item.price_change_percentage_1h_in_currency.toFixed(1) +
                         "%"
                       : "–"}
                   </td>
 
-                  <td className="text-center">
+                  <td className="hidden sm:table-cell text-center w-20">
                     {item.price_change_percentage_24h_in_currency != null
                       ? item.price_change_percentage_24h_in_currency.toFixed(
                           1
@@ -130,22 +144,23 @@ function CoinsList({ onLoaded }) {
                       : "–"}
                   </td>
 
-                  <td className="text-center">
+                  <td className="hidden sm:table-cell text-center w-20">
                     {item.price_change_percentage_7d_in_currency != null
                       ? item.price_change_percentage_7d_in_currency.toFixed(1) +
                         "%"
                       : "–"}
                   </td>
 
-                  <td className="text-center font-medium">
+                  <td className="hidden sm:table-cell text-center font-medium">
                     ${formatter.format(item.total_volume)}
                   </td>
 
                   <td className="text-center font-medium">
-                    ${formatter.format(item.market_cap)}
+                    <span className="hidden sm:inline">$</span>
+                    {formatter.format(item.market_cap)}
                   </td>
 
-                  <td className="text-center">
+                  <td className="w-30 md:w-70 h-8 sm:h-10">
                     <Sparkline
                       currentPrice={item.current_price}
                       percentChanges={{
@@ -162,6 +177,7 @@ function CoinsList({ onLoaded }) {
                         percent_change_24h:
                           item.price_change_percentage_24h_in_currency,
                       }}
+                      className="ml-2"
                     />
                   </td>
                 </tr>

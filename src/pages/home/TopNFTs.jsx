@@ -37,7 +37,7 @@ function TopNFTs({ data }) {
         src={nft.thumb || "/cryptionary-icon.png"}
         loading="lazy"
         alt={nft.name + " Logo"}
-        className="size-20 border-none rounded-full shadow-gray-500 shadow-lg hover:shadow-gray-800 duration-500"
+        className="size-8 md:size-20 border-none rounded-full shadow-gray-500 shadow-lg hover:shadow-gray-800 duration-500"
         onMouseEnter={() => {
           textRef.current = nft.name;
           isVisibleRef.current = true;
@@ -58,7 +58,7 @@ function TopNFTs({ data }) {
   ));
 
   return (
-    <div className="mx-4 my-10 flex flex-wrap justify-center items-center">
+    <div className="md:mx-4 mt-2 flex flex-wrap justify-center items-center">
       {jsx}
       {isVisible && (
         <div

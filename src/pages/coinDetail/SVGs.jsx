@@ -6,7 +6,7 @@ export const SVGs = {
       version="1.1"
       id="Layer_1"
       viewBox="0 0 508 508"
-      className="size-10 inline rotate-15"
+      className="size-8 sm:size-6 lg:size-10 inline rotate-15"
     >
       <g>
         <path

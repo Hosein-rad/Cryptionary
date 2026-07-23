@@ -66,9 +66,13 @@ function Watchlist() {
 
   if (!watchlist.length) {
     return (
-      <div className="w-full h-[calc(100vh-200px)] flex flex-col items-center justify-center text-white text-xl">
-        <p className="text-5xl font-extrabold">Your watchlist is empty.</p>
-        <p className="mt-5 text-2xl">Star some coins to see them here!</p>
+      <div className="w-full -mt-15 sm:-mt-30 md:-mt-50 xl:-mt-10 h-[calc(100vh-100px)] flex flex-col items-center justify-center text-white text-xl">
+        <p className="text-3xl md:text-5xl font-extrabold text-center">
+          Your watchlist is a little empty
+        </p>
+        <p className="mt-5 text-lg md:text-2xl text-center">
+          Star some coins to see them here
+        </p>
       </div>
     );
   }
@@ -115,8 +119,11 @@ function Watchlist() {
 
   return (
     <div className="w-full flex flex-col items-center">
-      <GradientTitle text="Watchlist" className="text-7xl my-10" />
-      <table className="w-full">
+      <GradientTitle
+        text="Watchlist"
+        className="text-[42px] md:text-8xl lg:text-[110px] xl:text-9xl my-5"
+      />
+      {/* <table className="w-full">
         <thead className="sticky top-0">
           <tr className="w-full h-10 text-sm bg-blue-200 cursor-default">
             <th className="w-[4%]"></th>
@@ -222,6 +229,131 @@ function Watchlist() {
                       percent_change_24h:
                         item.price_change_percentage_24h_in_currency,
                     }}
+                  />
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table> */}
+      <table className="w-full">
+        <thead className="sticky top-0 z-20">
+          <tr className="w-full h-10 text-md bg-blue-200 cursor-default">
+            <th className=""></th>
+            <th className="p-1 text-sm md:text-lg">Rank</th>
+            <th className="p-1 text-sm md:text-lg">Coin</th>
+            <th className="p-1 text-sm md:text-lg">Price$</th>
+            {/* 🔽 Hide on mobile, show as table-cell on sm+ */}
+            <th className="hidden sm:table-cell p-1 text-sm md:text-lg">1H%</th>
+            <th className="hidden sm:table-cell p-1 text-sm md:text-lg">
+              24H%
+            </th>
+            <th className="hidden sm:table-cell p-1 text-sm md:text-lg">7D%</th>
+            <th className="hidden sm:table-cell p-1 text-sm md:text-lg">
+              Volume24H
+            </th>
+            <th className="p-1 text-sm md:text-lg">
+              Market
+              <br className="block sm:hidden" />
+              Cap
+            </th>
+            <th className="p-1 text-sm md:text-lg">
+              1Y <br className="block sm:hidden" />
+              overview
+            </th>
+          </tr>
+        </thead>
+        <tbody className="bg-black/50">
+          {coins.map((item) => {
+            return (
+              <tr
+                key={item.id}
+                className="h-10 text-sm text-white hover:bg-[rgba(0,200,255,0.5)] duration-300 cursor-pointer"
+                onClick={() => navigate(`/coin/${item.id}`)}
+              >
+                <td
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleCoin(item.id);
+                  }}
+                  className="w-6 sm:w-10 text-center text-amber-300 cursor-copy hover:scale-120"
+                >
+                  {isWatched(item.id) ? "★" : "☆"}
+                </td>
+
+                <td className="text-center font-medium underline">
+                  {item.market_cap_rank}
+                </td>
+
+                <td className="h-10 my-auto lg:pl-10 flex flex-row items-center">
+                  <img
+                    src={item.image || "/cryptionary-icon.png"}
+                    loading="lazy"
+                    alt={item.symbol}
+                    className="rounded-full size-5 sm:size-8 inline"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/cryptionary-icon.png";
+                    }}
+                  />
+                  <span className="pl-1 md:pl-5 inline-block max-w-[80px] sm:max-w-[150px] text-sm sm:text-xl truncate font-bold">
+                    {item.name}
+                  </span>
+                </td>
+
+                <td className="text-center font-bold w-20 sm:w-30">
+                  ${formatter.format(item.current_price)}
+                </td>
+
+                {/* 🔽 Hide these cells on mobile, show on sm+ */}
+                <td className="hidden sm:table-cell text-center w-20">
+                  {item.price_change_percentage_1h_in_currency != null
+                    ? item.price_change_percentage_1h_in_currency.toFixed(1) +
+                      "%"
+                    : "–"}
+                </td>
+
+                <td className="hidden sm:table-cell text-center w-20">
+                  {item.price_change_percentage_24h_in_currency != null
+                    ? item.price_change_percentage_24h_in_currency.toFixed(1) +
+                      "%"
+                    : "–"}
+                </td>
+
+                <td className="hidden sm:table-cell text-center w-20">
+                  {item.price_change_percentage_7d_in_currency != null
+                    ? item.price_change_percentage_7d_in_currency.toFixed(1) +
+                      "%"
+                    : "–"}
+                </td>
+
+                <td className="hidden sm:table-cell text-center font-medium">
+                  ${formatter.format(item.total_volume)}
+                </td>
+
+                <td className="text-center font-medium">
+                  <span className="hidden sm:inline">$</span>
+                  {formatter.format(item.market_cap)}
+                </td>
+
+                <td className="w-20 md:w-70 h-8 sm:h-10">
+                  <Sparkline
+                    currentPrice={item.current_price}
+                    percentChanges={{
+                      percent_change_1y:
+                        item.price_change_percentage_1y_in_currency,
+                      percent_change_200d:
+                        item.price_change_percentage_200d_in_currency,
+                      percent_change_30d:
+                        item.price_change_percentage_30d_in_currency,
+                      percent_change_14d:
+                        item.price_change_percentage_14d_in_currency,
+                      percent_change_7d:
+                        item.price_change_percentage_7d_in_currency,
+                      percent_change_24h:
+                        item.price_change_percentage_24h_in_currency,
+                    }}
+                    className="ml-2"
                   />
                 </td>
               </tr>

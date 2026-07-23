@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import CurrencyItem from "./CurrencyItem.jsx";
 import MetaData from "../../data/MetaDataof2kCoins.json";
 import offlineData from "../../data/CoinPaprika-Top2k.json";
+import TimeframeSelect from "./TimeFrameSelect.jsx";
 
 const formatter = new Intl.NumberFormat("en", {
   notation: "compact",
@@ -37,30 +38,10 @@ function Losers() {
   return (
     <>
       <div className="mb-3 pb-3 grid grid-cols-2 border-b-2">
-        <p className="px-2 text-end text-xl">In the past ⮕</p>
-        <select
-          name="timeframe"
-          onChange={(e) => setTimeframe(e.target.value)}
-          className="w-1/2 font-bold text-center text-blue-700 border-1 rounded-xl hover:bg-white cursor-pointer duration-300 outline-none"
-        >
-          <option value="15m">15 minutes</option>
-          <option value="30m" className="bg-blue-100">
-            30 minutes
-          </option>
-          <option value="1h">1 hour</option>
-          <option value="6h" className="bg-blue-100">
-            6 hours
-          </option>
-          <option value="12h">12 hours</option>
-          <option value="24h" className="bg-blue-100">
-            24 hours
-          </option>
-          <option value="7d">7 days</option>
-          <option value="30d" className="bg-blue-100">
-            30 days
-          </option>
-          <option value="1y">1 year</option>
-        </select>
+        <p className="px-2 my-auto text-end text-sm md:text-md lg:text-xl">
+          In the past ⮕
+        </p>
+        <TimeframeSelect value={timeframe} onChange={setTimeframe} />
       </div>
       {losersArray.map((item, index) => (
         <CurrencyItem
@@ -69,9 +50,7 @@ function Losers() {
           id_={MetaData[item?.symbol]?.id}
           rank={item.rank}
           symbol={item.symbol}
-          name={
-            item.name.length > 12 ? item.name.slice(0, 12) + "…" : item.name
-          }
+          name={item.name}
           price={formatter.format(item.quotes.USD.price)}
           changePercent={item.quotes.USD[`percent_change_${timeframe}`].toFixed(
             2

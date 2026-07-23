@@ -130,13 +130,13 @@ export default function CoinDetail() {
   //  RENDER
   // ------------------------------------------------------------
   return (
-    <div className="relative w-full h-[calc(100vh-60px)] flex flex-row justify-evenly text-white overflow-hidden">
+    <div className="relative w-full h-fit sm:h-[calc(100vh-60px)] flex flex-col sm:flex-row justify-evenly text-white sm:overflow-hidden">
       {!baseCoinId && (
         <div>
           <p className="mt-8 text-center text-2xl font-extrabold">
             Looking for a specific coin?
           </p>
-          <p className="mb-5 text-center text-lg">
+          <p className="my-5 text-center text-lg">
             👆 Use the search bar, or click a card to get started 👇
           </p>
           <TopCoinsGrid />
@@ -159,9 +159,8 @@ export default function CoinDetail() {
       )}
 
       {baseCoinId && coinData && <DetailsCol coinData={coinData} />}
-
       {baseCoinId && chartData && (
-        <div className="w-2/3 h-full px-5 pb-15 flex flex-col overflow-y-scroll">
+        <div className="sm:w-2/3 h-full px-5 pb-15 flex flex-col overflow-y-scroll">
           <ChartCol chartData={chartData} />
         </div>
       )}

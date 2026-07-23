@@ -6,12 +6,6 @@ export default function CurrencyItem({
   rank,
   symbol,
   name,
-  marketCap,
-  miniChartData,
-  change1h,
-  change1d,
-  change1w,
-  volume24,
   price,
   changePercent,
 }) {
@@ -19,7 +13,7 @@ export default function CurrencyItem({
 
   return (
     <div
-      className="py-1 mx-7 pr-4 grid grid-flow-col grid-cols-[2fr_2fr_5fr_3fr] border-b-1 border-dotted border-gray-600 hover:rounded-full hover:bg-sky-200 hover:scale-105 duration-300 cursor-pointer"
+      className="py-1 mx-2 md:mx-4 lg:mx-7 md:px-2 grid grid-flow-col grid-cols-[2fr_2fr_5fr_3fr_3fr] text-sm border-b-1 border-dotted border-gray-600 hover:rounded-full hover:bg-sky-200 hover:scale-105 duration-300 cursor-pointer"
       onClick={() => {
         navigate(`/coin/${id_ || name?.toLowerCase().replace(/\s+/g, "-")}`);
       }}
@@ -29,21 +23,29 @@ export default function CurrencyItem({
         src={url || "/cryptionary-icon.png"}
         loading="lazy"
         alt={`${symbol} Logo`}
-        className="mx-auto size-10 rounded-full shadow-md shadow-gray-500"
+        className="mx-auto size-7 md:size-9 rounded-full shadow-md shadow-gray-500"
         // onError={(e) => {
 
         // }}
       />
-      {name && <div>{name}</div>}
-      {price && <div className="my-auto">{price} $</div>}
-      {change1h && <div>{change1h}</div>}
-      {change1d && <div>{change1d}</div>}
-      {change1w && <div>{change1w}</div>}
-      {volume24 && <div>{volume24}</div>}
-      {marketCap && <div>{marketCap}</div>}
-      {miniChartData && <div>{miniChartData}</div>}
+      {name && (
+        <div className="my-auto truncate sm:max-w-35 md:max-w-none">{name}</div>
+      )}
+      {price && (
+        <div className="my-auto">
+          <span className="text-yellow-600">$</span>
+          {price}
+        </div>
+      )}
       {changePercent && (
-        <div className="my-auto font-bold">{changePercent}%</div>
+        <div className="ml-2 my-auto font-bold">
+          {changePercent > 0 ? (
+            <span className="text-green-500">⇡</span>
+          ) : (
+            <span className="text-red-500">⇣</span>
+          )}
+          {changePercent}%
+        </div>
       )}
     </div>
   );

@@ -124,22 +124,6 @@ export default function About() {
           </div>
         </section>
 
-        {/* Why Cryptionary */}
-        <section className="space-y-5">
-          <h2 className="text-3xl font-bold text-cyan-300 border-b border-cyan-700 pb-2">
-            Why Cryptionary?
-          </h2>
-          <p className="text-gray-300 text-lg leading-relaxed">
-            Cryptionary was born from a desire to push front‑end development
-            skills to their limits while creating a genuinely useful tool for
-            the crypto community. Every feature is hand‑crafted with modern
-            React, responsive APIs, and a focus on performance and usability.
-            It’s a project that demonstrates real‑world problem solving – from
-            handling live market data to building custom charts and
-            offline‑ready fallbacks.
-          </p>
-        </section>
-
         {/* About the Developer */}
         <section className="space-y-6">
           <h2 className="text-3xl font-bold text-cyan-300 border-b border-cyan-700 pb-2">

@@ -28,7 +28,7 @@ function TopCoins({ data }) {
   const coins = data?.coins;
   if (!coins || !Array.isArray(coins)) return null;
 
-  const jsx = coins.map((coin) => (
+  const jsx = coins.slice(0, 7).map((coin) => (
     <div
       onClick={() => navigate(`/coin/${coin.item.id}`)}
       key={coin.item.coin_id}
@@ -38,7 +38,7 @@ function TopCoins({ data }) {
         src={coin.item.small || "/cryptionary-icon.png"}
         loading="lazy"
         alt={coin.item.name + " Logo"}
-        className="size-15 border-none rounded-full shadow-gray-500 shadow-lg hover:shadow-gray-700 duration-500"
+        className="size-8 md:size-20 border-none rounded-full shadow-gray-500 shadow-lg hover:shadow-gray-700 duration-500"
         onMouseEnter={() => {
           textRef.current = coin.item.name;
           isVisibleRef.current = true;
@@ -59,7 +59,7 @@ function TopCoins({ data }) {
   ));
 
   return (
-    <div className="mx-4 mt-4 flex flex-wrap justify-center items-center">
+    <div className="md:mx-4 mt-2 flex flex-wrap justify-center items-center">
       {jsx}
       {isVisible && (
         <div

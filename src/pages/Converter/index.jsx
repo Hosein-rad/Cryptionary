@@ -106,9 +106,9 @@ export default function Converter() {
   };
 
   return (
-    <div className="w-full h-[calc(100vh-100px)] flex flex-col items-center justify-center">
-      <div className="min-w-1/2 min-h-1/2 m-auto p-10 backdrop-brightness-50 rounded-xl text-white">
-        <GradientTitle text="Converter" className="h-30 text-7xl" />
+    <div className="w-full h-[calc(100vh-100px)] flex flex-col items-center">
+      <GradientTitle text="Converter" className="my-10 text-5xl md:text-7xl" />
+      <div className="w-4/5 md:w-3/5 lg:w-2/5 p-5 sm:p-10 backdrop-brightness-50 rounded-xl text-white">
         <div className="mt-5 flex gap-5 items-end">
           <input
             type="number"
@@ -154,8 +154,11 @@ export default function Converter() {
 
         {error && <p className="text-red-400 text-sm">{error.message}</p>}
       </div>
-      <p className="text-white text-lg">
-        Crypto ⇄ Crypto · Fiat ⇄ Fiat · Crypto ⇄ Fiat · All in one place
+      <p className="text-white text-xl text-center">
+        <span className="block text-xs sm:text-lg mt-10 lg:mt-5">
+          Crypto ⇄ Crypto · Fiat ⇄ Fiat · Crypto ⇄ Fiat
+        </span>
+        All in one place
       </p>
     </div>
   );

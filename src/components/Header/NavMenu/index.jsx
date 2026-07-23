@@ -31,30 +31,30 @@ function NavMenu() {
   return (
     <div
       ref={ref}
-      className="h-ful w-14 mt-1 z-100 flex flex-col items-end cursor-pointer"
+      className="h-ful w-10 mt-1 ml-2 z-100 flex flex-col items-end cursor-pointer"
     >
-      {/* Toggle Button (with plus) */}
+      {/* Menu Toggle Button */}
       <button
         onClick={toggleOpen}
         className={`
           menu-toggle
-          relative size-10 rounded-full bg-white text-2xl font-bold cursor-pointer
+          relative size-8 sm:size-10 rounded-full bg-sky-200 text-2xl font-bold cursor-pointer
           flex items-center justify-center
           transition-transform duration-1000 ease-in-out
           ${isOpen ? "rotate-325" : "rotate-0"}
         `}
         aria-label="Toggle menu"
       >
-        <span className="block text-3xl leading-none">{SVGs.menu}</span>
+        <span className="block">{SVGs.menu}</span>
         {/* Glow behind button */}
-        <span className="absolute inset-0 rounded-full bg-white/30 blur-xl -z-10" />
+        <span className="absolute inset-0 rounded-full bg-white/60 blur-lg -z-10" />
       </button>
 
       {/* Menu items – vertical cascade with stagger */}
       <div
         className={`
           menu-items-container
-          relative mt-3 flex flex-col items-end gap-2
+          relative mt-1 md:mt-3 flex flex-col items-end gap-1 md:gap-2
           ${isOpen ? "open" : ""}
         `}
       >
@@ -65,10 +65,11 @@ function NavMenu() {
             onClick={() => setIsOpen(false)}
             className={`
               menu-item
-              relative flex items-center gap-3 p-2 
+              relative flex items-center sm:gap-1 md:gap-3 p-1 sm:p-2 
               rounded-full text-black font-medium
               transition-all duration-500
-              hover:scale-105 active:scale-95 group
+              hover:scale-105 active:scale-95
+              group
               ${({ isActive }) =>
                 isActive
                   ? "ring-2 ring-white ring-offset-2 ring-offset-cyan-800"
@@ -79,8 +80,10 @@ function NavMenu() {
               transitionDelay: `${index * 80}ms`,
             }}
           >
-            {/* Icon */}
-            <span className="text-sm tracking-wide">{item.label}</span>
+            {/* text and Icon */}
+            <span className="text-xs md:text-sm tracking-wide">
+              {item.label}
+            </span>
             <span className="w-6 h-6 flex items-center justify-center">
               {SVGs[item.icon] || item.icon}
             </span>

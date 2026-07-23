@@ -4,7 +4,7 @@ import { useMemo } from "react";
 // Internal coordinate system (not pixels)
 const COORD_WIDTH = 60;
 const COORD_HEIGHT = 15;
-const PADDING = 5;
+const PADDING = 1;
 
 export default function Sparkline({
   currentPrice,

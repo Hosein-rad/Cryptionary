@@ -63,15 +63,22 @@ function Hero() {
   };
 
   return (
-    <div id="#" className="pt-20 pb-25 rounded-t-3xl">
-      <p className="text-cyan-500/50 text-4xl w-3/5 font-light text-center font-['Gorehand'] select-none z-10">
-        Welcome to
+    <div
+      id="#"
+      className="pt-40 md:pt-35 lg:pt-45 xl:pt-25 pb-25 rounded-t-3xl"
+    >
+      <p className="text-cyan-500/50 text-2xl md:text-5xl w-3/5 font-light text-center font-['Gorehand'] select-none z-10">
+        Welcome <br className="block lg:hidden" />
+        to
       </p>
-      <div className="w-9/10 mx-auto rounded-br-full border-black border-b-6 mask-l-from-85%">
-        <GradientTitle text={"Cryptionary"} className="text-9xl my-5" />
+      <div className="w-full lg:w-9/10 mx-auto rounded-br-full border-black border-b-6 mask-l-from-85%">
+        <GradientTitle
+          text={"Cryptionary"}
+          className="text-[42px] md:text-8xl lg:text-[110px] xl:text-9xl my-5"
+        />
       </div>
 
-      <div className="mt-5 text-gray-100 text-2xl text-right w-4/5 pb-30 select-none">
+      <div className="mt-5 text-gray-100 text-right w-9/10 md:w-4/5 pb-30 select-none">
         <TypewriterEffect
           words={phrases[phraseIndex]}
           onCycleComplete={handleCycleComplete}
