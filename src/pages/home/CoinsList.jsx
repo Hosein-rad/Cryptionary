@@ -5,7 +5,7 @@ import Sparkline from "./Sparkline";
 import offlineData from "../../data/CoinGeckoMarket.json";
 import useWatchlist from "../../hooks/useWatchlist/useWatchlist";
 
-const COINS_PER_PAGE = 250;
+const COINS_PER_PAGE = 100; // changed to 100
 
 function CoinsList({ onLoaded }) {
   const { toggleCoin, isWatched } = useWatchlist();
@@ -32,7 +32,7 @@ function CoinsList({ onLoaded }) {
           : undefined;
       },
       initialData: {
-        pages: [offlineData],
+        pages: [offlineData.slice(0, COINS_PER_PAGE)], // only first 100 offline
         pageParams: [1],
       },
       staleTime: 60000,
@@ -46,9 +46,9 @@ function CoinsList({ onLoaded }) {
       onLoaded?.();
       hasCalledLoaded.current = true;
     }
-  }, [isSuccess, onLoaded]);
+  }, [isSuccess, onLoaded]); 
 
-  const handleAdd250 = () => {
+  const handleAdd100 = () => {
     fetchNextPage();
   };
 
@@ -62,7 +62,6 @@ function CoinsList({ onLoaded }) {
               <th className="p-1 text-sm md:text-lg">Rank</th>
               <th className="md:w-60 p-1 text-sm md:text-lg">Coin</th>
               <th className="p-1 text-sm md:text-lg">Price$</th>
-              {/* 🔽 Hide on mobile, show as table-cell on sm+ */}
               <th className="hidden sm:table-cell p-1 text-sm md:text-lg">
                 1H%
               </th>
@@ -87,114 +86,110 @@ function CoinsList({ onLoaded }) {
             </tr>
           </thead>
           <tbody className="bg-black/50">
-            {fullData.map((item) => {
-              return (
-                <tr
-                  key={item.id}
-                  className="h-10 text-sm text-white hover:bg-[rgba(0,200,255,0.5)] duration-300 cursor-pointer"
-                  onClick={() => navigate(`/coin/${item.id}`)}
+            {fullData.map((item) => (
+              <tr
+                key={item.id}
+                className="h-10 text-sm text-white hover:bg-[rgba(0,200,255,0.5)] duration-300 cursor-pointer"
+                onClick={() => navigate(`/coin/${item.id}`)}
+              >
+                <td
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleCoin(item.id);
+                  }}
+                  className="w-6 sm:w-10 text-center text-amber-300 cursor-copy hover:scale-120"
                 >
-                  <td
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleCoin(item.id);
+                  {isWatched(item.id) ? "★" : "☆"}
+                </td>
+
+                <td className="text-center font-medium underline">
+                  {item.market_cap_rank}
+                </td>
+
+                <td className="h-10 my-auto sm:pl-5 flex flex-row items-center">
+                  <img
+                    src={item.image || "/cryptionary-icon.png"}
+                    loading="lazy"
+                    alt={item.symbol}
+                    className="rounded-full size-5 sm:size-8 inline"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/cryptionary-icon.png";
                     }}
-                    className="w-6 sm:w-10 text-center text-amber-300 cursor-copy hover:scale-120"
-                  >
-                    {isWatched(item.id) ? "★" : "☆"}
-                  </td>
+                  />
+                  <span className="pl-1 md:pl-5 inline-block max-w-[80px] sm:max-w-[150px] text-sm sm:text-xl truncate font-bold">
+                    {item.name}
+                  </span>
+                </td>
 
-                  <td className="text-center font-medium underline">
-                    {item.market_cap_rank}
-                  </td>
+                <td className="text-center font-bold w-20 sm:w-30">
+                  ${formatter.format(item.current_price)}
+                </td>
 
-                  <td className="h-10 my-auto sm:pl-5 flex flex-row items-center">
-                    <img
-                      src={item.image || "/cryptionary-icon.png"}
-                      loading="lazy"
-                      alt={item.symbol}
-                      className="rounded-full size-5 sm:size-8 inline"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "/cryptionary-icon.png";
-                      }}
-                    />
-                    <span className="pl-1 md:pl-5 inline-block max-w-[80px] sm:max-w-[150px] text-sm sm:text-xl truncate font-bold">
-                      {item.name}
-                    </span>
-                  </td>
+                <td className="hidden sm:table-cell text-center w-20">
+                  {item.price_change_percentage_1h_in_currency != null
+                    ? item.price_change_percentage_1h_in_currency.toFixed(1) +
+                      "%"
+                    : "–"}
+                </td>
 
-                  <td className="text-center font-bold w-20 sm:w-30">
-                    ${formatter.format(item.current_price)}
-                  </td>
+                <td className="hidden sm:table-cell text-center w-20">
+                  {item.price_change_percentage_24h_in_currency != null
+                    ? item.price_change_percentage_24h_in_currency.toFixed(1) +
+                      "%"
+                    : "–"}
+                </td>
 
-                  {/* 🔽 Hide these cells on mobile, show on sm+ */}
-                  <td className="hidden sm:table-cell text-center w-20">
-                    {item.price_change_percentage_1h_in_currency != null
-                      ? item.price_change_percentage_1h_in_currency.toFixed(1) +
-                        "%"
-                      : "–"}
-                  </td>
+                <td className="hidden sm:table-cell text-center w-20">
+                  {item.price_change_percentage_7d_in_currency != null
+                    ? item.price_change_percentage_7d_in_currency.toFixed(1) +
+                      "%"
+                    : "–"}
+                </td>
 
-                  <td className="hidden sm:table-cell text-center w-20">
-                    {item.price_change_percentage_24h_in_currency != null
-                      ? item.price_change_percentage_24h_in_currency.toFixed(
-                          1
-                        ) + "%"
-                      : "–"}
-                  </td>
+                <td className="hidden sm:table-cell text-center font-medium">
+                  ${formatter.format(item.total_volume)}
+                </td>
 
-                  <td className="hidden sm:table-cell text-center w-20">
-                    {item.price_change_percentage_7d_in_currency != null
-                      ? item.price_change_percentage_7d_in_currency.toFixed(1) +
-                        "%"
-                      : "–"}
-                  </td>
+                <td className="text-center font-medium">
+                  <span className="hidden sm:inline">$</span>
+                  {formatter.format(item.market_cap)}
+                </td>
 
-                  <td className="hidden sm:table-cell text-center font-medium">
-                    ${formatter.format(item.total_volume)}
-                  </td>
-
-                  <td className="text-center font-medium">
-                    <span className="hidden sm:inline">$</span>
-                    {formatter.format(item.market_cap)}
-                  </td>
-
-                  <td className="w-30 md:w-70 h-8 sm:h-10">
-                    <Sparkline
-                      currentPrice={item.current_price}
-                      percentChanges={{
-                        percent_change_1y:
-                          item.price_change_percentage_1y_in_currency,
-                        percent_change_200d:
-                          item.price_change_percentage_200d_in_currency,
-                        percent_change_30d:
-                          item.price_change_percentage_30d_in_currency,
-                        percent_change_14d:
-                          item.price_change_percentage_14d_in_currency,
-                        percent_change_7d:
-                          item.price_change_percentage_7d_in_currency,
-                        percent_change_24h:
-                          item.price_change_percentage_24h_in_currency,
-                      }}
-                      className="ml-2"
-                    />
-                  </td>
-                </tr>
-              );
-            })}
+                <td className="w-30 md:w-70 h-8 sm:h-10">
+                  <Sparkline
+                    currentPrice={item.current_price}
+                    percentChanges={{
+                      percent_change_1y:
+                        item.price_change_percentage_1y_in_currency,
+                      percent_change_200d:
+                        item.price_change_percentage_200d_in_currency,
+                      percent_change_30d:
+                        item.price_change_percentage_30d_in_currency,
+                      percent_change_14d:
+                        item.price_change_percentage_14d_in_currency,
+                      percent_change_7d:
+                        item.price_change_percentage_7d_in_currency,
+                      percent_change_24h:
+                        item.price_change_percentage_24h_in_currency,
+                    }}
+                    className="ml-2"
+                  />
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
 
-      {/* Load more button – stays fixed at bottom */}
+      {/* Load more button */}
       <div className="absolute bottom-0 w-full py-2 flex items-center justify-center backdrop-blur-xs z-20">
         <button
-          onClick={handleAdd250}
-          disabled={isFetchingNextPage || !hasNextPage} // MODIFIED: use isFetchingNextPage, hasNextPage
+          onClick={handleAdd100}
+          disabled={isFetchingNextPage || !hasNextPage}
           className="py-1 px-5 mx-auto text-white bg-gray-800 font-bold border-2 rounded-xl cursor-pointer hover:bg-white hover:text-black duration-300 disabled:opacity-50"
         >
-          {isFetchingNextPage ? "Loading…" : "Add 250"} {/* MODIFIED */}
+          {isFetchingNextPage ? "Loading…" : "Add 100"}
         </button>
       </div>
     </div>
