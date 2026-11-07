@@ -1,9 +1,9 @@
 import Header from "./components/Header/Header";
-import Home from "./pages/Home";
-import Converter from "./pages/Converter";
-import CoinDetail from "./pages/CoinDetail/Index";
-import Watchlist from "./pages/Watchlist";
-import About from "./pages/about";
+import Home from "./pages/Home/index";
+import Converter from "./pages/Converter/index";
+import CoinDetail from "./pages/CoinDetail/index";
+import Watchlist from "./pages/Watchlist/index";
+import About from "./pages/about/index";
 import {
   createBrowserRouter,
   RouterProvider,
